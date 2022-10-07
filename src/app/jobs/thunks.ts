@@ -10,3 +10,12 @@ export const getJobsThunk = createAsyncThunk("jobs/getJobs", async () => {
     console.error(error);
   }
 });
+
+export const getSingleJob = createAsyncThunk('jobs/getAJob', async (id:string | undefined) => {
+  try {
+    const res = await axios.get(`${URL}/jobs/${id}`)
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+})

@@ -3,55 +3,45 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getJobsThunk } from "../app/jobs/thunks";
 import { Link } from "react-router-dom";
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import PaidIcon from "@mui/icons-material/Paid";
-import MoneyOffIcon from "@mui/icons-material/MoneyOff";
-
 const JobPage = () => {
   const dispatch = useAppDispatch();
   const jobs = useAppSelector((state) => state.jobs.jobs);
   useEffect(() => {
     dispatch(getJobsThunk());
   }, [dispatch]);
-  return (
-    <div>
-      {jobs.map((el) => (
-        <Box sx={{ minWidth: 275 }} key={el.id}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h4" component="div">
-                {el.title}
-              </Typography>
 
-              <Typography variant="body2">
-                {el.description}
-                <br />
-                {'"a benevolent smile"'}
-              </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {el.paid ? <PaidIcon /> : <MoneyOffIcon />}
-              </Typography>
-              <Typography
-                sx={{ fontSize: 14 }}
-                color="text.secondary"
-                gutterBottom
-              >
-                {el.user.name}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Link style={{ textDecoration: "none" }} to={`/jobs/${el.id}`}>
-                <Button size="small">Learn More</Button>
-              </Link>
-            </CardActions>
-          </Card>
-        </Box>
-      ))}
+  return (
+    <div className="grid grid-cols-4 mt-4">
+      <div className=""></div>
+      <div className="col-span-2">
+        {jobs.map((el) => (
+          <div
+            className="my-4 border-2 border-indigo-400 p-5 rounded-lg text-gray-600"
+            key={el.id}
+          >
+            <h3 className="text-3xl mb-2">{el.title}</h3>
+            <p className="my-2">{el.description}</p>
+            <p>Posted By: {el.user.name}</p>
+            <div className="flex flex-row justify-between my-3 text-gray-600">
+              <p className="bg-indigo-200 p-1 my-1 rounded-lg">
+                {el.role.name}
+              </p>
+              <p className={el.paid ? "text-green-600" : `"text-red-500`}>
+                {el.paid ? "Paid" : "Unpaid"}
+              </p>
+              <p className="oldstyle-num">
+                $ {el.amount ? `${el.amount}` : "000"}
+              </p>
+              <p className="text-gray-600">{el.location}</p>
+              
+            </div>
+            <Link className="text-lg text-sky-700 " to={`/jobs/${el.id}`}>
+              More Details
+            </Link>
+          </div>
+        ))}
+      </div>
+      <div></div>
     </div>
   );
 };
