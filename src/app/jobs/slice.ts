@@ -17,22 +17,22 @@ type Job = {
     name: string;
   };
   role: { name: string };
-  jobLocations: {
-    lat: number;
-    lon: number;
-  };
+  
+    lat?: number;
+    lng?: number;
+
 };
 
 type InitialState = {
   jobs: Job[] | [];
-  job: Job | {};
+  job: Job | undefined;
   isLoading: boolean;
   isError: boolean;
 };
 
 const initialState: InitialState = {
   jobs: [],
-  job: {},
+  job: undefined,
   isLoading: false,
   isError: false,
 };

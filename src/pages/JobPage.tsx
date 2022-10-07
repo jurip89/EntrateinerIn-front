@@ -11,7 +11,7 @@ const JobPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="grid grid-cols-4 mt-4">
+    <div className="grid grid-cols-6 mt-4">
       <div className=""></div>
       <div className="col-span-2">
         {jobs.map((el) => (

@@ -5,6 +5,7 @@ import { store } from "./app/store";
 import { BrowserRouter as Browser } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import 'mapbox-gl/dist/mapbox-gl.css'
 import "./index.css";
 
 const container = document.getElementById("root")!;
