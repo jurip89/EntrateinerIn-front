@@ -13,10 +13,10 @@ const JobPage = () => {
   return (
     <div className="grid grid-cols-6 mt-4">
       <div className=""></div>
-      <div className="col-span-2">
+      <div className="col-span-3 mb-6">
         {jobs.map((el) => (
           <div
-            className="my-4 border-2 border-indigo-400 p-5 rounded-lg text-gray-600"
+            className="mb-6 border-2 border-indigo-400 p-5 rounded-lg text-gray-600"
             key={el.id}
           >
             <h3 className="text-3xl mb-2">{el.title}</h3>

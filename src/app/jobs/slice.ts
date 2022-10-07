@@ -15,6 +15,7 @@ type Job = {
   user: {
     email: string;
     name: string;
+    profilePic: string;
   };
   role: { name: string };
   
