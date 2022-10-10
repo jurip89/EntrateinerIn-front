@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, FC } from "react";
+import React, { FC } from "react";
 import { MAP_BOX_KEY } from "../utils";
 import Map, {Marker} from 'react-map-gl';
 
@@ -10,16 +10,16 @@ interface MapProps{
 const MyMap:FC<MapProps>= (props):JSX.Element =>{
   
   
-  const [zoom, setZoom] = useState<number>(9);
+
   
   return (
 
     <Map initialViewState={{
-      longitude: props?.lng,
-      latitude: props?.lat,
-      zoom: zoom
+      longitude:  props.lng || 4.9041 ,
+      latitude:   props.lat || 52.3676,
+      zoom: 7
     }}
-      style={{ width: '95%', margin: '0 auto', height: '28vh' }}
+      style={{ width: '95%', margin: '0 auto', height: '45vh' }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAP_BOX_KEY}
     >
