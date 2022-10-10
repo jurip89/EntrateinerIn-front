@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { Action } from "@reduxjs/toolkit";
-import { talentsThunk } from "./thunks";
+import { talentsThunk,getOneTalentThunk } from "./thunks";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Image = {
@@ -20,6 +20,16 @@ type Review = {
   user: User;
 };
 
+type UserRole = {
+  yearsOfExperience: number;
+};
+
+type Role = {
+  name: string;
+  id: number;
+  userRoles: UserRole;
+};
+
 type Talet = {
   name: string;
   email: string;
@@ -28,6 +38,7 @@ type Talet = {
   intro: string;
   profilePic: string;
   reviews: Review[];
+  roles: Role[];
 };
 
 type InitialStateObj = {
@@ -62,6 +73,16 @@ export const talentSlice = createSlice({
     builder.addCase(talentsThunk.rejected, (state) => {
       state.isError = true;
     });
+    builder.addCase(getOneTalentThunk.pending, state => {
+      state.isLoading = true;
+    });
+    builder.addCase(getOneTalentThunk.fulfilled, (state, action: PayloadAction<Talet>) => {
+      state.isLoading = false;
+      state.talent = action.payload;
+    });
+    builder.addCase(getOneTalentThunk.rejected, state => {
+      state.isError = true;
+    })
   },
 });
 

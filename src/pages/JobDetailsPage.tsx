@@ -42,8 +42,9 @@ const JobDetailsPage = () => {
             <p className="mx-4 m-auto">Posted by: {job?.user.name }</p>
           </div>
 
-          <h5 className="text-lg my-3 mx-2">Description:</h5>
+          
           <div className="m-4 text-gray-600 space-y-5">
+            <h5 className="text-lg my-3 text-black">Description:</h5>
             <p> {job?.description}</p>
             <p>
               <span className="text-black">Location: </span>
