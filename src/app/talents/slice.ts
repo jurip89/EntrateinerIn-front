@@ -43,14 +43,21 @@ type Talet = {
 
 type InitialStateObj = {
   talents: Talet[] | [];
-  talent: Talet | null;
+  talent: Talet ;
   isLoading: boolean;
   isError: boolean;
 };
 
 const initialState: InitialStateObj = {
   talents: [],
-  talent: null,
+  talent: {name: '',
+  email: '',
+  images: [],
+  id:0,
+  intro:'',
+  profilePic: '',
+  reviews: [],
+  roles:[]},
   isLoading: false,
   isError: false,
 };
