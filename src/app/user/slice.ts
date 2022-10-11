@@ -1,11 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { signUp, login, getUserWithStoredToken } from "./thunks";
-const initialState = {
+
+type Profile = {
+    name: string;
+    email: string;
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    profilePic: string;
+    intro: string | null;
+    isRecruiter:boolean
+}
+
+type InitialState = {
+    token: string | null;
+    profile: null | Profile;
+    isLoading: boolean;
+    isError:boolean
+
+
+}
+
+const initialState: InitialState = {
   token: localStorage.getItem("token"),
   profile: null,
   isLoading: false,
   isError: false,
 };
+
+
 
 export const userSlice = createSlice({
   name: "user",
@@ -54,9 +77,8 @@ export const userSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getUserWithStoredToken.fulfilled, (state, action) => {
-        state.isLoading = false;
-        console.log(action.payload)
-        state.profile = action.payload;
+      state.isLoading = false;
+      state.profile = action.payload;
     });
     builder.addCase(getUserWithStoredToken.rejected, (state) => {
       state.isError = true;

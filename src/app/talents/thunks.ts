@@ -1,7 +1,7 @@
 import { URL } from './../../utils';
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { deleteImg } from './slice';
 
 export const talentsThunk = createAsyncThunk('talents/getTalents', async () => {
     try {
@@ -17,6 +17,21 @@ export const getOneTalentThunk = createAsyncThunk('talents/getOne', async (id: s
     try {
         const res = await axios.get(`${URL}/talents/${id}`);
         return res.data
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+export const deleteImage = createAsyncThunk('talents/deleteImage', async (id: number | undefined) => {
+    const token :string  | null= localStorage.getItem('token')
+    try {
+        if (!token) return;
+        await axios.delete(`${URL}/images/${id}`,{
+        headers: { Authorization: `Bearer ${token}` },
+        })
+        deleteImg(id)
+        return;
     } catch (error) {
         console.log(error)
     }

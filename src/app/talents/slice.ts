@@ -69,7 +69,12 @@ const initialState: InitialStateObj = {
 export const talentSlice = createSlice({
   name: "talents",
   initialState,
-  reducers: {},
+  reducers: {
+    deleteImg: (state, action) => {
+      const newImgs = [...state.talent.images].filter(el => el.id !== action.payload.id)
+      state.talent.images =newImgs
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(talentsThunk.pending, (state) => {
       state.isLoading = true;
@@ -100,5 +105,5 @@ export const talentSlice = createSlice({
   },
 });
 
-export const {} = talentSlice.actions;
+export const {deleteImg} = talentSlice.actions;
 export default talentSlice.reducer;
