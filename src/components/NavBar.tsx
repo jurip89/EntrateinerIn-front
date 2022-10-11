@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch,useAppSelector } from "../app/hooks";
+import { logOut } from "../app/user/slice";
 const NavBar = () => {
+  const dispatch = useAppDispatch();
+  const token =useAppSelector(state=>state.auth.token)
   return (
     <div className="w-full bg-indigo-400 p-2.5 flex flex-row">
       <div className="basis-1/4">
@@ -14,8 +18,8 @@ const NavBar = () => {
         <Link to='/talents'>Talents</Link>
         <Link to='/login'>Login</Link>
         <Link to='/login'>Login</Link>
-        <Link to='/login'>Login</Link>
-        <Link to='/login'>Login</Link>
+        {!token && <Link to='/login'>Login</Link>}
+        {token&&<button onClick={()=>dispatch(logOut())}>LogOut</button>}
       </div>
     </div>
   );
