@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { Action } from "@reduxjs/toolkit";
-import { talentsThunk,getOneTalentThunk } from "./thunks";
+
+import { talentsThunk, getOneTalentThunk } from "./thunks";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Image = {
@@ -9,12 +9,14 @@ type Image = {
 };
 
 type User = {
+  id: number;
   name: string;
   profilePic: string;
 };
 
 type Review = {
   title: string;
+  comment: string;
   id: number;
   upddatedAt: Date;
   user: User;
@@ -43,21 +45,23 @@ type Talet = {
 
 type InitialStateObj = {
   talents: Talet[] | [];
-  talent: Talet ;
+  talent: Talet;
   isLoading: boolean;
   isError: boolean;
 };
 
 const initialState: InitialStateObj = {
   talents: [],
-  talent: {name: '',
-  email: '',
-  images: [],
-  id:0,
-  intro:'',
-  profilePic: '',
-  reviews: [],
-  roles:[]},
+  talent: {
+    name: "",
+    email: "",
+    images: [],
+    id: 0,
+    intro: "",
+    profilePic: "",
+    reviews: [],
+    roles: [],
+  },
   isLoading: false,
   isError: false,
 };
@@ -80,16 +84,19 @@ export const talentSlice = createSlice({
     builder.addCase(talentsThunk.rejected, (state) => {
       state.isError = true;
     });
-    builder.addCase(getOneTalentThunk.pending, state => {
+    builder.addCase(getOneTalentThunk.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(getOneTalentThunk.fulfilled, (state, action: PayloadAction<Talet>) => {
-      state.isLoading = false;
-      state.talent = action.payload;
-    });
-    builder.addCase(getOneTalentThunk.rejected, state => {
+    builder.addCase(
+      getOneTalentThunk.fulfilled,
+      (state, action: PayloadAction<Talet>) => {
+        state.isLoading = false;
+        state.talent = action.payload;
+      }
+    );
+    builder.addCase(getOneTalentThunk.rejected, (state) => {
       state.isError = true;
-    })
+    });
   },
 });
 

@@ -2,6 +2,7 @@ import React, { MouseEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getOneTalentThunk } from "../app/talents/thunks";
+import { Link } from "react-router-dom";
 const TalentDetailPage = () => {
   const dispatch = useAppDispatch();
   const talent = useAppSelector((state) => state.talents.talent);
@@ -21,23 +22,25 @@ const TalentDetailPage = () => {
     setIndex(i);
   };
   const nextImg = () => {
-    const max: number | undefined = talent?.images.length;
-    if (index === max -1 || !index) {
-        setIndex(0);
-        setCurrentImg(talent?.images[0].source)
+    const max: number  = talent?.images.length;
+    setIndex(index+ 1);
+    if (index === max - 1 ) {
+      setIndex(0);
+      setCurrentImg(talent?.images[0].source);
     }
-      setIndex(prev=> prev+1)
-      
+    
+    setCurrentImg(talent.images[index].source)
   };
-    const previousImg = () => {
-        const max: number = talent.images.length;
-        if (index === 0 || !index) {
-            setIndex(max - 1);
-            setCurrentImg(talent.images[max-1].source)
-        }
-        setIndex(prev=>prev-1)
-        setCurrentImg(talent?.images[index].source)
+  const previousImg = () => {
+    const max: number = talent?.images.length;
+    
+    if (index === -1 ) {
+      setIndex(index + max);
+      return
     }
+    setCurrentImg(talent?.images[index].source);
+    setIndex(index - 1);
+  };
 
   return (
     <div className="w-full">
@@ -92,6 +95,18 @@ const TalentDetailPage = () => {
                   />
                 ))}
               </div>
+              <div>
+                <h4 className="text-xl">Reviews:</h4>
+                <div>
+                  {talent.reviews.length > 1 && talent.reviews.map((el) => (
+                    <div key={el.id}>
+                      <h5>{el.title}</h5>
+                      <p>{el.comment}</p>
+                      <p>Posted By: <Link to={`/jobs/${el.user.id}` }>{ el.user.name}</Link></p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="col-span-4 border-2 border-gray-500 rounded-xl">
@@ -104,7 +119,12 @@ const TalentDetailPage = () => {
                 </p>
               </div>
               <div className=" flex  justify-between">
-                <div className="my-auto mx-20 text-6xl cursor-pointer" onClick={()=>nextImg()}>{"<"}</div>
+                <div
+                  className="my-auto mx-20 text-6xl cursor-pointer"
+                  onClick={() => previousImg()}
+                >
+                  {"<"}
+                </div>
                 <div
                   className="w-96 h-96 mb-12"
                   style={{
@@ -113,7 +133,12 @@ const TalentDetailPage = () => {
                     backgroundRepeat: "no-repeat",
                   }}
                 />
-                <div className="my-auto mx-20 text-6xl cursor-pointer" onClick={()=>previousImg()}>{">"}</div>
+                <div
+                  className="my-auto mx-20 text-6xl cursor-pointer"
+                  onClick={() => nextImg()}
+                >
+                  {">"}
+                </div>
               </div>
             </div>
           )}
