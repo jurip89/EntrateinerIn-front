@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { talentsThunk, getOneTalentThunk } from "./thunks";
+import { talentsThunk, getOneTalentThunk, deleteImage } from "./thunks";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Image = {
@@ -71,9 +71,11 @@ export const talentSlice = createSlice({
   initialState,
   reducers: {
     deleteImg: (state, action) => {
-      const newImgs = [...state.talent.images].filter(el => el.id !== action.payload.id)
-      state.talent.images =newImgs
-    }
+      const newImgs = [...state.talent.images].filter(
+        (el) => el.id !== action.payload
+      );
+      state.talent.images = newImgs;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(talentsThunk.pending, (state) => {
@@ -105,5 +107,5 @@ export const talentSlice = createSlice({
   },
 });
 
-export const {deleteImg} = talentSlice.actions;
+export const { deleteImg } = talentSlice.actions;
 export default talentSlice.reducer;

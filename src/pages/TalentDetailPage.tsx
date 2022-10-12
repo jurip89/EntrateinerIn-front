@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getOneTalentThunk, deleteImage } from "../app/talents/thunks";
 import { deleteImg } from "../app/talents/slice";
-import { Link,useNavigate } from "react-router-dom";
+import { Spin } from "../components";
+import { Link, useNavigate } from "react-router-dom";
 const TalentDetailPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -46,15 +47,15 @@ const TalentDetailPage = () => {
     setIndex(index - 1);
   };
 
-  const destroy = (id:number) => {
+  const destroy = (id: number) => {
     dispatch(deleteImage(id));
-   dispatch(deleteImg(id))
- }
+    dispatch(deleteImg(id));
+  };
 
   return (
     <div className="w-full">
       {loading ? (
-        <p>...Loading</p>
+        <Spin />
       ) : (
         <div className="my-20 grid grid-cols-6 ">
           <div></div>
@@ -93,20 +94,24 @@ const TalentDetailPage = () => {
               </div>
               <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 m-auto gap-5">
                 {talent?.images.map((image, i) => (
-                  <div key={image.id} >{user?.id === idNumber && (
-                      <button className="bg-white m-auto w-8 h-8" onClick={() => destroy(image.id)}>X</button>
+                  <div key={image.id}>
+                    {user?.id === idNumber && (
+                      <button
+                        className="bg-white m-auto w-8 h-8"
+                        onClick={() => destroy(image.id)}
+                      >
+                        X
+                      </button>
                     )}
-                  <div
-                    onClick={() => handleClickPic(image.source, i)}
-                    className="xl:w-52 xl:h-52 lg:w-48 lg:h-48 md:w-40 md:h-40 sm:h-56 sm:w-56 justify-end"
-                    style={{
-                      backgroundImage: `url(${image.source})`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                   
-                  />
-                    
+                    <div
+                      onClick={() => handleClickPic(image.source, i)}
+                      className="xl:w-52 xl:h-52 lg:w-48 lg:h-48 md:w-40 md:h-40 sm:h-56 sm:w-56 justify-end"
+                      style={{
+                        backgroundImage: `url(${image.source})`,
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    />
                   </div>
                 ))}
               </div>

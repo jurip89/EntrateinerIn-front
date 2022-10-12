@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { getJobsThunk, getSingleJob } from "./thunks";
+import { getJobsThunk, getSingleJob, createJob } from "./thunks";
 
 type Job = {
   id: number;
@@ -18,10 +18,9 @@ type Job = {
     profilePic: string;
   };
   role: { name: string };
-  
-    lat?: number;
-    lng?: number;
 
+  lat?: number;
+  lng?: number;
 };
 
 type InitialState = {
@@ -66,9 +65,21 @@ const jobsSlice = createSlice({
         state.job = action.payload;
       }
     );
-    builder.addCase(getSingleJob.rejected, state => {
+    builder.addCase(getSingleJob.rejected, (state) => {
       state.isError = true;
-    })
+    });
+    builder.addCase(createJob.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(createJob.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.job = action.payload;
+    });
+    builder.addCase(createJob.rejected, (state) => {
+      state.isError = true;
+    });
   },
 });
 
