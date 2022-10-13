@@ -1,13 +1,18 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getOneTalentThunk } from "../app/talents/thunks";
-import { Link } from "react-router-dom";
+import { getOneTalentThunk, deleteImage } from "../app/talents/thunks";
+import { deleteImg } from "../app/talents/slice";
+import { Spin } from "../components";
+import { Link, useNavigate } from "react-router-dom";
 const TalentDetailPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const talent = useAppSelector((state) => state.talents.talent);
   const loading = useAppSelector((state) => state.talents.isLoading);
+  const user = useAppSelector((state) => state.auth.profile);
   const { id } = useParams<string>();
+  const idNumber: number = parseInt(id!);
   useEffect(() => {
     dispatch(getOneTalentThunk(id));
   }, [dispatch, id]);
@@ -22,30 +27,35 @@ const TalentDetailPage = () => {
     setIndex(i);
   };
   const nextImg = () => {
-    const max: number  = talent?.images.length;
-    setIndex(index+ 1);
-    if (index === max - 1 ) {
+    const max: number = talent?.images.length;
+    setIndex(index + 1);
+    if (index === max - 1) {
       setIndex(0);
       setCurrentImg(talent?.images[0].source);
     }
-    
-    setCurrentImg(talent.images[index].source)
+
+    setCurrentImg(talent.images[index].source);
   };
   const previousImg = () => {
     const max: number = talent?.images.length;
-    
-    if (index === -1 ) {
+
+    if (index === -1) {
       setIndex(index + max);
-      return
+      return;
     }
     setCurrentImg(talent?.images[index].source);
     setIndex(index - 1);
   };
 
+  const destroy = (id: number) => {
+    dispatch(deleteImage(id));
+    dispatch(deleteImg(id));
+  };
+
   return (
     <div className="w-full">
       {loading ? (
-        <p>...Loading</p>
+        <Spin />
       ) : (
         <div className="my-20 grid grid-cols-6 ">
           <div></div>
@@ -63,6 +73,7 @@ const TalentDetailPage = () => {
                 <h2 className="text-5xl text-gray-600 my-auto">
                   {talent?.name}
                 </h2>
+                {user?.id === idNumber && <button>Edit Profile</button>}
               </div>
               <div className="flex flex-col-reverse">
                 {talent?.roles.map((el) => (
@@ -81,50 +92,63 @@ const TalentDetailPage = () => {
               <div>
                 <p className="text-lg">{talent?.intro}</p>
               </div>
-              <div className="grid lg:grid-cols-4 md:grid-cols-2">
+              <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 m-auto gap-5">
                 {talent?.images.map((image, i) => (
-                  <div
-                    onClick={() => handleClickPic(image.source, i)}
-                    className="md:w-48 lg:w-60 lg:h-60 md:h-48"
-                    style={{
-                      backgroundImage: `url(${image.source})`,
-                      backgroundSize: "cover",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                    key={image.id}
-                  />
+                  <div key={image.id}>
+                    {user?.id === idNumber && (
+                      <button
+                        className="bg-white m-auto w-8 h-8"
+                        onClick={() => destroy(image.id)}
+                      >
+                        X
+                      </button>
+                    )}
+                    <div
+                      onClick={() => handleClickPic(image.source, i)}
+                      className="xl:w-52 xl:h-52 lg:w-48 lg:h-48 md:w-40 md:h-40 sm:h-56 sm:w-56 justify-end"
+                      style={{
+                        backgroundImage: `url(${image.source})`,
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
               <div>
                 <h4 className="text-xl">Reviews:</h4>
                 <div>
-                  {talent.reviews.length > 1 && talent.reviews.map((el) => (
-                    <div key={el.id}>
-                      <h5>{el.title}</h5>
-                      <p>{el.comment}</p>
-                      <p>Posted By: <Link to={`/jobs/${el.user.id}` }>{ el.user.name}</Link></p>
-                    </div>
-                  ))}
+                  {talent.reviews.length > 1 &&
+                    talent.reviews.map((el) => (
+                      <div key={el.id}>
+                        <h5>{el.title}</h5>
+                        <p>{el.comment}</p>
+                        <p>
+                          Posted By:{" "}
+                          <Link to={`/jobs/${el.user.id}`}>{el.user.name}</Link>
+                        </p>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
           ) : (
             <div className="col-span-4 border-2 border-gray-500 rounded-xl">
               <div className="w-full flex justify-end">
-                <p
+                <button
                   className="text-xl m-3 cursor-pointer"
                   onClick={() => setOpenPreview(false)}
                 >
                   X
-                </p>
+                </button>
               </div>
               <div className=" flex  justify-between">
-                <div
+                <button
                   className="my-auto mx-20 text-6xl cursor-pointer"
                   onClick={() => previousImg()}
                 >
                   {"<"}
-                </div>
+                </button>
                 <div
                   className="w-96 h-96 mb-12"
                   style={{
@@ -133,12 +157,12 @@ const TalentDetailPage = () => {
                     backgroundRepeat: "no-repeat",
                   }}
                 />
-                <div
+                <button
                   className="my-auto mx-20 text-6xl cursor-pointer"
                   onClick={() => nextImg()}
                 >
                   {">"}
-                </div>
+                </button>
               </div>
             </div>
           )}

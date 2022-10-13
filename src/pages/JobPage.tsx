@@ -4,21 +4,24 @@ import { getJobsThunk } from "../app/jobs/thunks";
 import { Link } from "react-router-dom";
 import { MAP_BOX_KEY } from "../utils";
 import Map, { Marker } from "react-map-gl";
-import cinema from '../cinema.png'
+import cinema from "../cinema.png";
 const JobPage = () => {
   const [list, setList] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const jobs = useAppSelector((state) => state.jobs.jobs);
-  
+  const user = useAppSelector((state) => state.auth.profile);
   useEffect(() => {
     dispatch(getJobsThunk());
   }, [dispatch]);
-  
+
   return (
     <div className={`grid grid-cols-6 mt-4`}>
       <div className="flex flex-col">
         <button onClick={() => setList(true)}>List</button>
         <button onClick={() => setList(false)}>Map</button>
+        {user && user.isRecruiter && (
+          <Link to="/jobs/create">Post a Vacancy</Link>
+        )}
       </div>
       <div className={`${list ? "col-span-3 " : "col-span-5"} mb-6`}>
         {list ? (
@@ -65,7 +68,10 @@ const JobPage = () => {
                 anchor="center"
                 key={el.id}
               >
-                <Link className="text-lg text-blue-800 bg-orange-700" to={`/jobs/${el.id}`}>
+                <Link
+                  className="text-lg text-blue-800 bg-orange-700"
+                  to={`/jobs/${el.id}`}
+                >
                   <img src={cinema} alt="" />
                 </Link>
               </Marker>
