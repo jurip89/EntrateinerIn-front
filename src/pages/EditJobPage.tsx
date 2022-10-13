@@ -34,6 +34,16 @@ const job = useAppSelector((state) => state.jobs.job);
   const [location, setLocation] = useState<string>(job?.location!);
   const [category, setCategory] = useState<string | number>(job?.role?.name!);
   const [categories, setCategories] = useState<Role[]>([]);
+
+    const setAll = () => {
+      setTtile(job?.title!);
+          setDescription(job?.description!);
+          setAmount(job?.amount!);
+          setCategory(job?.role?.id!)
+          setLocation(job?.location!)
+          setPaid(job?.paid!);
+        setDuration(job?.duration!)
+  }
     
     useEffect(() => {
     if (!token) {
@@ -47,7 +57,7 @@ const job = useAppSelector((state) => state.jobs.job);
     
   
     
-  console.log({ title, description, duration, paid, amount, category });
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(
@@ -134,7 +144,7 @@ const job = useAppSelector((state) => state.jobs.job);
               </option>
             ))}
           </select>
-          <button type="submit">Create job!</button>
+          <button type="submit">Edit job!</button>
         </form>
       )}
     </div>
