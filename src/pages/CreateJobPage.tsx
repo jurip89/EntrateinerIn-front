@@ -4,21 +4,28 @@ import { createJob } from "../app/jobs/thunks";
 import { useNavigate } from "react-router-dom";
 import { URL } from "../utils";
 import axios from "axios";
-const CreateJobPage = () => {
-  type Role = {
+
+type Role = {
     name: string;
     id: string | number;
   };
 
+
+
+const CreateJobPage = () => {
+  
+
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.profile);
+
   const [title, setTtile] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [duration, setDuration] = useState<string>("");
   const [paid, setPaid] = useState<boolean>(false);
   const [amount, setAmount] = useState<string>("0");
   const [location, setLocation] = useState<string>("");
-  const [category, setCategory] = useState<string | number>("1");
+  const [category, setCategory] = useState<string>("1");
   const [categories, setCategories] = useState<Role[]>([]);
 
   const getCategories = async () => {
@@ -44,12 +51,14 @@ const CreateJobPage = () => {
         categoryId: category,
       })
     );
+    
     setAmount("0");
     setDescription("");
     setTtile("");
     setDuration("");
     setPaid(false);
     setLocation("");
+    navigate(`/jobs`)
   };
 
   return (
@@ -61,11 +70,13 @@ const CreateJobPage = () => {
           onChange={(e) => {
             setTtile(e.target.value);
           }}
+          placeholder='Title'
         />
         <textarea
+          placeholder="Description"
           name=""
           id=""
-          cols={30}
+          cols={50}
           rows={10}
           value={description}
           onChange={(e) => {
@@ -73,26 +84,31 @@ const CreateJobPage = () => {
           }}
         />
         <input
+          placeholder="Duration"
           type="text"
           value={duration}
           onChange={(e) => {
             setDuration(e.target.value);
           }}
         />
-        <input type="checkbox" checked={paid} onChange={() => setPaid(!paid)} />
-        <input
+        <label htmlFor="paid">{paid? 'Paid': 'Unpaid' }</label>
+        <input type="checkbox" id="paid" checked={paid} onChange={() => setPaid(!paid)} />
+        {paid && <input
+          placeholder="Amount"
           type="number"
           value={amount}
           onChange={(e) => {
             setAmount(e.target.value);
           }}
-        />
+        />}
         <input
+          placeholder="Location"
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <label htmlFor="category">Role: </label>
+        <select id="category" value={category} onChange={(e) => setCategory(e.target.value)}>
           {categories.map((el) => (
             <option key={el.id} value={el.id}>
               {el.name}

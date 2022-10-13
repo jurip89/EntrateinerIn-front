@@ -10,6 +10,8 @@ import {
   Login,
   SignUp,
   CreateJob,
+  EditJob,
+  MyJobsRecruiter,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components";
@@ -28,6 +30,8 @@ function App() {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobsD />} />
         <Route path="/jobs/create" element={<CreateJob />} />
+        <Route path="/jobs/:id/edit" element={<EditJob />} />
+        <Route path="/jobs/myjobs/recruiter" element={<MyJobsRecruiter />} />
         <Route path="/talents" element={<Talents />} />
         <Route path="/talents/:id" element={<Talent />} />
         <Route path="/login" element={<Login />} />

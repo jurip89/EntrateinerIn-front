@@ -5,17 +5,23 @@ import { Link } from "react-router-dom";
 import { MAP_BOX_KEY } from "../utils";
 import Map, { Marker } from "react-map-gl";
 import cinema from "../cinema.png";
+import { Spin } from "../components";
 const JobPage = () => {
   const [list, setList] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-  const jobs = useAppSelector((state) => state.jobs.jobs);
-  const user = useAppSelector((state) => state.auth.profile);
+  
   useEffect(() => {
     dispatch(getJobsThunk());
   }, [dispatch]);
+  
+const loading =useAppSelector(state=>state.jobs.isLoading)
+  const jobs = useAppSelector((state) => state.jobs.jobs);
+  const user = useAppSelector((state) => state.auth.profile);
+  
 
-  return (
-    <div className={`grid grid-cols-6 mt-4`}>
+  return (<div>
+
+    {loading?<Spin/>:<div className={`grid grid-cols-6 mt-4`}>
       <div className="flex flex-col">
         <button onClick={() => setList(true)}>List</button>
         <button onClick={() => setList(false)}>Map</button>
@@ -25,27 +31,27 @@ const JobPage = () => {
       </div>
       <div className={`${list ? "col-span-3 " : "col-span-5"} mb-6`}>
         {list ? (
-          jobs.map((el) => (
+          jobs?.map((el) => (
             <div
               className="mb-6 border-2 border-indigo-400 p-5 rounded-lg text-gray-600"
-              key={el.id}
+              key={el?.id}
             >
-              <h3 className="text-3xl mb-2">{el.title}</h3>
-              <p className="my-2">{el.description}</p>
-              <p>Posted By: {el.user.name}</p>
+              <h3 className="text-3xl mb-2">{el?.title}</h3>
+              <p className="my-2">{el?.description}</p>
+              <p>Posted By: {el?.user?.name}</p>
               <div className="flex flex-row justify-between my-3 text-gray-600">
                 <p className="bg-indigo-200 p-1 my-1 rounded-lg">
-                  {el.role.name}
+                  {el?.role?.name}
                 </p>
-                <p className={el.paid ? "text-green-600" : `"text-red-500`}>
-                  {el.paid ? "Paid" : "Unpaid"}
+                <p className={el?.paid ? "text-green-600" : `"text-red-500`}>
+                  {el?.paid ? "Paid" : "Unpaid"}
                 </p>
                 <p className="oldstyle-num">
-                  $ {el.amount ? `${el.amount}` : "000"}
+                  $ {el?.amount ? `${el?.amount}` : "000"}
                 </p>
-                <p className="text-gray-600">{el.location}</p>
+                <p className="text-gray-600">{el?.location}</p>
               </div>
-              <Link className="text-lg text-sky-700 " to={`/jobs/${el.id}`}>
+              <Link className="text-lg text-sky-700 " to={`/jobs/${el?.id}`}>
                 More Details
               </Link>
             </div>
@@ -63,8 +69,8 @@ const JobPage = () => {
           >
             {jobs.map((el) => (
               <Marker
-                longitude={el.lng}
-                latitude={el.lat}
+                longitude={el?.lng}
+                latitude={el?.lat}
                 anchor="center"
                 key={el.id}
               >
@@ -79,6 +85,7 @@ const JobPage = () => {
           </Map>
         )}
       </div>
+    </div>}
     </div>
   );
 };

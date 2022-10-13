@@ -6,3 +6,5 @@ export { default as JobsD } from "./JobDetailsPage";
 export { default as SignUp } from "./SignUpPage";
 export { default as Login } from "./LoginPage";
 export { default as CreateJob } from "./CreateJobPage";
+export { default as EditJob } from "./EditJobPage";
+export { default as MyJobsRecruiter } from "./MyJobsPageRecruiter";

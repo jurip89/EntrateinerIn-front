@@ -1,9 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { getJobsThunk, getSingleJob, createJob } from "./thunks";
+import {
+  getJobsThunk,
+  getSingleJob,
+  createJob,
+  getMyJobsRecruiter,
+  deleteJob,
+  updateJob,
+} from "./thunks";
 
 type Job = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   duration: string;
@@ -17,7 +24,7 @@ type Job = {
     name: string;
     profilePic: string;
   };
-  role: { name: string };
+  role: { name: string; id: string };
 
   lat?: number;
   lng?: number;
@@ -61,12 +68,21 @@ const jobsSlice = createSlice({
     builder.addCase(
       getSingleJob.fulfilled,
       (state, action: PayloadAction<Job>) => {
-        state.isLoading = false;
         state.job = action.payload;
+        state.isLoading = false;
       }
     );
     builder.addCase(getSingleJob.rejected, (state) => {
       state.isError = true;
+    });
+    builder.addCase(getMyJobsRecruiter.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(getMyJobsRecruiter.fulfilled, (state, action) => {
+      state.isError = false;
+      state.jobs = action.payload;
+      state.isLoading = false;
     });
     builder.addCase(createJob.pending, (state) => {
       state.isLoading = true;
@@ -76,8 +92,36 @@ const jobsSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.job = action.payload;
+      console.log(action.payload);
+      state.jobs = [action.payload, ...state.jobs];
     });
     builder.addCase(createJob.rejected, (state) => {
+      state.isError = true;
+    });
+    builder.addCase(deleteJob.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(deleteJob.fulfilled, (state, action) => {
+      const newJobs = [...state.jobs].filter((el) => el.id !== action.payload);
+      state.isError = false;
+      state.isLoading = false;
+      state.jobs = newJobs;
+    });
+    builder.addCase(updateJob.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(updateJob.fulfilled, (state, action) => {
+      const newState = [...state.jobs].filter(
+        (el) => el.id !== action.payload.id
+      );
+      state.jobs = [action.payload, ...newState];
+      state.isError = false;
+      state.isLoading = false;
+    });
+    builder.addCase(updateJob.rejected, (state) => {
+      state.isLoading = false;
       state.isError = true;
     });
   },
