@@ -14,14 +14,14 @@ type Job = {
   categoryId: string | number;
 };
 type JobToUpdate = {
-  id: string |undefined;
+  id: string | undefined;
   title: string;
   description: string;
   duration: string;
   paid: boolean;
   amount: string | number;
   location: string;
-  categoryId: number |string;
+  categoryId: number | string;
 };
 
 export const getJobsThunk = createAsyncThunk("jobs/getJobs", async () => {
@@ -60,11 +60,26 @@ export const getMyJobsRecruiter = createAsyncThunk(
   }
 );
 
+export const getMyJobDetailRecruiter = createAsyncThunk(
+  "jobs/myjobsdetail/recruiter",
+  async (id: string | undefined) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${URL}/jobs/myjobs/recruiter/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const createJob = createAsyncThunk("jobs/create", async (job: Job) => {
   try {
     const { location } = job;
     const token = localStorage.getItem("token");
-    
+
     const geoLocation = await axios.get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MAP_BOX_KEY}`
     );
@@ -80,32 +95,35 @@ export const createJob = createAsyncThunk("jobs/create", async (job: Job) => {
   }
 });
 
-export const deleteJob = createAsyncThunk('jobs/delete', async (id: string) => {
+export const deleteJob = createAsyncThunk("jobs/delete", async (id: string) => {
   try {
     const token = localStorage.getItem("token");
     await axios.delete(`${URL}/jobs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
-    })
-    return id
+    });
+    return id;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
-export const updateJob = createAsyncThunk('jobs/update', async (job:JobToUpdate ) => {
-  try {
-    const { location } = job;
-    const token = localStorage.getItem("token");
-    
-    const geoLocation = await axios.get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MAP_BOX_KEY}`
-    );
-    const [lng, lat] = geoLocation.data.features[0].geometry.coordinates;
-    const completedJob = { lat, lng, ...job };
-    const res = await axios.patch(`${URL}/jobs/${job.id}`,completedJob,{
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    return res.data
-  } catch (error) {
-    console.log(error)
+export const updateJob = createAsyncThunk(
+  "jobs/update",
+  async (job: JobToUpdate) => {
+    try {
+      const { location } = job;
+      const token = localStorage.getItem("token");
+
+      const geoLocation = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${MAP_BOX_KEY}`
+      );
+      const [lng, lat] = geoLocation.data.features[0].geometry.coordinates;
+      const completedJob = { lat, lng, ...job };
+      const res = await axios.patch(`${URL}/jobs/${job.id}`, completedJob, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-})
+);

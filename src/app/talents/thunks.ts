@@ -40,3 +40,14 @@ export const deleteImage = createAsyncThunk(
     }
   }
 );
+export const applyForJob = createAsyncThunk(
+  "talents/apply",
+  async (application) => {
+    try {
+      const res = await axios.post(`${URL}/apply`, application);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);

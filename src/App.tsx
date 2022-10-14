@@ -12,6 +12,8 @@ import {
   CreateJob,
   EditJob,
   MyJobsRecruiter,
+  MyJobsRecruiterD,
+  MyJobsTalent,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components";
@@ -32,6 +34,11 @@ function App() {
         <Route path="/jobs/create" element={<CreateJob />} />
         <Route path="/jobs/:id/edit" element={<EditJob />} />
         <Route path="/jobs/myjobs/recruiter" element={<MyJobsRecruiter />} />
+        <Route path="/jobs/myjobs/star" element={<MyJobsTalent />} />
+        <Route
+          path="/jobs/myjobs/recruiter/:id"
+          element={<MyJobsRecruiterD />}
+        />
         <Route path="/talents" element={<Talents />} />
         <Route path="/talents/:id" element={<Talent />} />
         <Route path="/login" element={<Login />} />
