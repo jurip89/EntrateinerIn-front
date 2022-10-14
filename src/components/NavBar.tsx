@@ -19,7 +19,8 @@ const NavBar = () => {
         <Link to='/jobs'>Jobs</Link>
         <Link to='/talents'>Talents</Link>
         {user? <Link to={`/talents/${user.id}` }>My Profile</Link>: ''}
-        <Link to='/login'>Login</Link>
+        {user?.isRecruiter && <Link to='/jobs/myjobs/recruiter'>My Jobs</Link>}
+        {user && !user?.isRecruiter && <Link to='/jobs/myjobs/star'>My Jobs</Link>}
         {!token && <Link to='/login'>Login</Link>}
         {token&&<button onClick={()=>dispatch(logOut())}>LogOut</button>}
       </div>
