@@ -8,6 +8,7 @@ import {
   deleteJob,
   updateJob,
   getMyJobDetailRecruiter,
+  getMyJobsTalent
 } from "./thunks";
 
 type Applicant = {
@@ -151,6 +152,19 @@ const jobsSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
     });
+    builder.addCase(getMyJobsTalent.pending, state => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(getMyJobsTalent.fulfilled, (state, action) => {
+      state.isError = false;
+      state.jobs = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getMyJobsTalent.rejected, state => {
+      state.isLoading = false;
+      state.isError = false;
+    })
   },
 });
 

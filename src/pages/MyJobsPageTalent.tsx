@@ -1,7 +1,17 @@
-import React from "react";
+import React,{useEffect} from "react";
+import { useAppDispatch } from "../app/hooks";
+import { getMyJobsTalent } from "../app/jobs/thunks";
+import { JobList } from "../components";
+const MyJobsPageTalent = () => {
+  
+  const dispatch = useAppDispatch();
 
-const myJobsPageTalent = () => {
-  return <div>myJobsPageTalent</div>;
+  useEffect(() => {
+    dispatch(getMyJobsTalent())
+  },[dispatch])
+  
+ 
+  return <JobList/>
 };
 
-export default myJobsPageTalent;
+export default MyJobsPageTalent;

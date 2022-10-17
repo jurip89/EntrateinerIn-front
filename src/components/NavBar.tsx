@@ -8,7 +8,7 @@ const NavBar = () => {
   const user = useAppSelector(state => state.auth.profile)
   
   return (
-    <div className="w-full bg-indigo-400 p-2.5 flex flex-row">
+    <div className="w-full bg-blue-400 p-2.5 flex flex-row pb-8">
       <div className="basis-1/4">
         <Link to='/'><h2 className="text-3xl font-mono text-white font-bold">
           Entratein<span className="font-thin">In</span>

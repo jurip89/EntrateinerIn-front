@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { talentsThunk, getOneTalentThunk, deleteImage } from "./thunks";
+import { talentsThunk, getOneTalentThunk, deleteImage,addReview} from "./thunks";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Image = {
@@ -19,7 +19,8 @@ type Review = {
   comment: string;
   id: number;
   upddatedAt: Date;
-  user: User;
+  authorReview: User;
+  rating: number | string;
 };
 
 type UserRole = {
@@ -104,6 +105,21 @@ export const talentSlice = createSlice({
     builder.addCase(getOneTalentThunk.rejected, (state) => {
       state.isError = true;
     });
+    builder.addCase(addReview.pending, state => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(addReview.fulfilled, (state, action: PayloadAction<Review>) => {
+      const newReviews = [action.payload, ...state.talent.reviews];
+      state.talent.reviews = newReviews;
+      state.isLoading = false;
+      state.isError = false;
+    });
+    builder.addCase(addReview.rejected, state => {
+      state.isError = true;
+      state.isLoading = false;
+    });
+    
   },
 });
 

@@ -60,6 +60,18 @@ export const getMyJobsRecruiter = createAsyncThunk(
   }
 );
 
+export const getMyJobsTalent = createAsyncThunk('jobs/getMyJobsTalent', async () => {
+  try {
+    const token: string | null = localStorage.getItem("token");
+    const res = await axios.get(`${URL}/jobs/myjobs/talent`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 export const getMyJobDetailRecruiter = createAsyncThunk(
   "jobs/myjobsdetail/recruiter",
   async (id: string | undefined) => {

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getMyJobsRecruiter, deleteJob } from "../app/jobs/thunks";
+import { getMyJobsRecruiter } from "../app/jobs/thunks";
 
-import { Spin } from "../components";
+import { JobList } from "../components";
 
 const MyJobsPage = () => {
   const dispatch = useAppDispatch();
@@ -14,31 +14,11 @@ const MyJobsPage = () => {
     dispatch(getMyJobsRecruiter());
   }, [dispatch, navigate, token]);
 
-  const loading = useAppSelector((state) => state.jobs.isLoading);
-  const myJobs = useAppSelector((state) => state.jobs.jobs);
+  
+ 
 
   return (
-    <div>
-      {loading ? (
-        <Spin />
-      ) : (
-        <div className="grid grid-cols-6">
-          <div></div>
-          <div className="col-span-4 flex m-7">
-            {myJobs?.map((el) => (
-              <div className="w-full" key={el.id}>
-                <Link to={`/jobs/myjobs/recruiter/${el.id}`}>
-                  <h3>{el.title}</h3>
-                </Link>
-                <button onClick={() => dispatch(deleteJob(el.id))}>
-                  Delete
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    <JobList/>
   );
 };
 
