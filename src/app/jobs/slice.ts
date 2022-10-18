@@ -7,7 +7,23 @@ import {
   getMyJobsRecruiter,
   deleteJob,
   updateJob,
+  getMyJobDetailRecruiter,
+  getMyJobsTalent
 } from "./thunks";
+
+type Applicant = {
+  applicants: { status: string };
+
+  id: number;
+  name: string;
+  profilePic: string;
+  roles:Role[]
+};
+
+type Role = {
+  id: number;
+  name:string
+}
 
 type Job = {
   id: string;
@@ -28,6 +44,7 @@ type Job = {
 
   lat?: number;
   lng?: number;
+  applicantsJob: Applicant[];
 };
 
 type InitialState = {
@@ -84,6 +101,23 @@ const jobsSlice = createSlice({
       state.jobs = action.payload;
       state.isLoading = false;
     });
+    builder.addCase(getMyJobsRecruiter.rejected, (state) => {
+      state.isError = true;
+      state.isLoading = false;
+    });
+    builder.addCase(getMyJobDetailRecruiter.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(getMyJobDetailRecruiter.fulfilled, (state, action) => {
+      state.job = action.payload;
+      state.isError = false;
+      state.isLoading = false;
+    });
+    builder.addCase(getMyJobDetailRecruiter.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
     builder.addCase(createJob.pending, (state) => {
       state.isLoading = true;
       state.isError = false;
@@ -124,6 +158,19 @@ const jobsSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
     });
+    builder.addCase(getMyJobsTalent.pending, state => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(getMyJobsTalent.fulfilled, (state, action) => {
+      state.isError = false;
+      state.jobs = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(getMyJobsTalent.rejected, state => {
+      state.isLoading = false;
+      state.isError = false;
+    })
   },
 });
 

@@ -8,3 +8,5 @@ export { default as Login } from "./LoginPage";
 export { default as CreateJob } from "./CreateJobPage";
 export { default as EditJob } from "./EditJobPage";
 export { default as MyJobsRecruiter } from "./MyJobsPageRecruiter";
+export { default as MyJobsTalent } from "./MyJobsPageTalent";
+export { default as MyJobsRecruiterD } from "./MyJobsPageRecruiterDetails";
