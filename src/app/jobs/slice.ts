@@ -17,7 +17,13 @@ type Applicant = {
   id: number;
   name: string;
   profilePic: string;
+  roles:Role[]
 };
+
+type Role = {
+  id: number;
+  name:string
+}
 
 type Job = {
   id: string;

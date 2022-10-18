@@ -22,33 +22,31 @@ const TalentPage = () => {
           <div className="col-span-3 ">
             <div className="grid gap-5 2xl:grid-cols-5 lg:grid-cols-3  sm:grid-cols-2">
               {talents.map((el) => (
-                <div key={el.id} className="rounded-lg border-2">
-                  <Link to={`/talents/${el.id}`}>
-                    <div className="mx-4 my-4 flex justify-between">
-                      <div
-                        className="rounded-full w-20 h-20 "
-                        style={{
-                          backgroundImage: `url(${el.profilePic})`,
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      />
-                      <h3 className="text-lg">{el.name}</h3>
+                <Link
+                  key={el.id}
+                  to={`/talents/${el.id}`}
+                  className="group relative block bg-black"
+                >
+                  <img
+                    alt="Profile pic"
+                    src={el.profilePic}
+                    className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
+                  />
+
+                  <div className="relative p-8">
+                    {el.roles.map(role => <p key={ role.id} className="text-sm font-medium uppercase tracking-widest text-pink-500">
+                      {role.name }
+                    </p>)
+}
+                    <p className="text-2xl font-bold text-white">{el.name}</p>
+
+                    <div className="mt-64">
+                      <div className="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                        <p className="text-sm text-white">{el.intro}</p>
+                      </div>
                     </div>
-                    <div className="w-full">
-                      <ul className="flex justify-between">
-                        {el.roles.map((role) => (
-                          <li
-                            className="bg-indigo-400 p-1 m-3 rounded-lg"
-                            key={role.id}
-                          >
-                            {role.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Link>
-                </div>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
