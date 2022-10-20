@@ -14,43 +14,52 @@ const JobList = () => {
   const jobs = useAppSelector((state) => state.jobs.jobs);
   const user = useAppSelector((state) => state.auth.profile);
   const [list, setList] = useState<boolean>(true);
-  return ( 
+  return (
     <div>
       {loading ? (
         <Spin />
       ) : (
-        <div className={`grid xl:grid-cols-6 mt-4 lg:grid-cols-5 md:grid-cols-4`}>
-          <div className="relative  bg-white dark:bg-gray-800">
-    <div className="flex flex-col sm:flex-row sm:justify-around">
-        <div className="w-72">
-            <nav className="mt-10 px-6 ">
-                <button onClick={() => setList(true)} className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-600 dark:text-gray-400 rounded-lg " >
-                    <span className="mx-4 text-lg font-normal">
-                        List
-                    </span>
-                    <span className="flex-grow text-right">
-                    </span>
-                </button>
-                <button onClick={() => setList(false)} className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-800 dark:text-gray-100 rounded-lg dark:bg-gray-600" >
-                    <span className="mx-4 text-lg font-normal">
-                        Map
-                    </span>
-                    <span className="flex-grow text-right">
-                    </span>
-                </button>
-                    {user && user.isRecruiter &&(<Link to='/jobs/create' className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-600 dark:text-gray-400 rounded-lg " >
-                    <span className="mx-4 text-lg font-normal">
+        <div
+          className={`grid xl:grid-cols-6 mt-4 lg:grid-cols-5 md:grid-cols-4`}
+        >
+          <div className="relative  bg-white ">
+            <div className="flex flex-col sm:flex-row sm:justify-around">
+              <div className="w-72">
+                <nav className="mt-10 px-6 ">
+                  <button
+                    onClick={() => setList(true)}
+                    className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors  duration-200  text-gray-600 rounded-lg "
+                  >
+                    <span className="mx-4 text-lg font-normal">List</span>
+                    <span className="flex-grow text-right"></span>
+                  </button>
+                  <button
+                    onClick={() => setList(false)}
+                    className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors duration-200  text-gray-800  rounded-lg"
+                  >
+                    <span className="mx-4 text-lg font-normal">Map</span>
+                    <span className="flex-grow text-right"></span>
+                  </button>
+                  {user && user?.isRecruiter && (
+                    <Link
+                      to="/jobs/create"
+                      className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors duration-200  text-gray-600 rounded-lg"
+                    >
+                      <span className="mx-4 text-lg font-normal">
                         Create a Job
-                    </span>
-                    <span className="flex-grow text-right">
-                    </span>
-                </Link>)}
-                
-            </nav>
-        </div>
-    </div>
-</div>
-          <div className={`${list ? "col-span-4 " : "xl:col-span-4 md:col-span-3 "} mb-6`}>
+                      </span>
+                      <span className="flex-grow text-right"></span>
+                    </Link>
+                  )}
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div
+            className={`${
+              list ? "col-span-4 " : "xl:col-span-4 md:col-span-3 "
+            } mb-6`}
+          >
             {list ? (
               <section className="mt-12 w-full mx-auto px-4">
                 <div>
@@ -62,7 +71,7 @@ const JobList = () => {
                 <ul className="mt-12 space-y-6">
                   {jobs.map((el) => (
                     <li
-                      key={el.id}
+                      key={el?.id}
                       className="p-5 bg-white rounded-md shadow-sm"
                     >
                       <div>
@@ -72,7 +81,7 @@ const JobList = () => {
                               <div className="flex w-3/4 justify-between">
                                 <Link to={`/jobs/myjobs/recruiter/${el.id}`}>
                                   <h3 className="text-xl font-medium text-cyan-600">
-                                    {el.title}
+                                    {el?.title}
                                   </h3>
                                 </Link>
                                 <button
@@ -85,7 +94,7 @@ const JobList = () => {
                             ) : (
                               <Link to={`/jobs/${el?.id}`}>
                                 <h3 className="text-xl font-medium text-cyan-600">
-                                  {el.title}
+                                  {el?.title}
                                 </h3>
                               </Link>
                             )}
@@ -107,7 +116,7 @@ const JobList = () => {
                                   clipRule="evenodd"
                                 />
                               </svg>
-                              {moment(el.createdAt).format("DD-MM-YYYY")}
+                              {moment(el?.createdAt).format("DD-MM-YYYY")}
                             </span>
                             <span className="flex items-center text-gray-500">
                               <svg
@@ -123,7 +132,7 @@ const JobList = () => {
                                   clipRule="evenodd"
                                 />
                               </svg>
-                              {el.amount}
+                              {el?.amount}
                             </span>
                           </div>
                         </div>
@@ -142,7 +151,7 @@ const JobList = () => {
                               />
                               <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
                             </svg>
-                            {el.role.name}
+                            {el?.role?.name}
                           </span>
                           <span className="flex items-center text-gray-500">
                             <svg
@@ -157,7 +166,7 @@ const JobList = () => {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            {el.location}
+                            {el?.location}
                           </span>
                         </div>
                       </div>
@@ -181,11 +190,11 @@ const JobList = () => {
                     longitude={el?.lng}
                     latitude={el?.lat}
                     anchor="center"
-                    key={el.id}
+                    key={el?.id}
                   >
                     <Link
                       className="text-lg text-blue-800 bg-orange-700"
-                      to={`/jobs/${el.id}`}
+                      to={`/jobs/${el?.id}`}
                     >
                       <img src={cinema} alt="" />
                     </Link>

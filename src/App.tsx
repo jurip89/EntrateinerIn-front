@@ -14,6 +14,7 @@ import {
   MyJobsRecruiter,
   MyJobsRecruiterD,
   MyJobsTalent,
+  EditProfile,
 } from "./pages";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components";
@@ -41,6 +42,7 @@ function App() {
         />
         <Route path="/talents" element={<Talents />} />
         <Route path="/talents/:id" element={<Talent />} />
+        <Route path="/talents/:id/edit" element={<EditProfile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
