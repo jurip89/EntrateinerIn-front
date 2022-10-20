@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { createJob } from "../app/jobs/thunks";
+import { editProfile } from "../app/talents/thunks";
 import { useNavigate } from "react-router-dom";
 import { URL } from "../utils";
+import { CLOUD_KEY } from "../utils";
 import axios from "axios";
 
 type Role = {
@@ -10,18 +11,18 @@ type Role = {
   id: string | number;
 };
 
-const CreateJobPage = () => {
+const EditProfilePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.profile);
 
-  const [title, setTtile] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [duration, setDuration] = useState<string>("");
-  const [paid, setPaid] = useState<boolean>(false);
-  const [amount, setAmount] = useState<string>("0");
-  const [location, setLocation] = useState<string>("");
-  const [category, setCategory] = useState<string>("1");
+  const [name, setName] = useState<string>("");
+  const [intro, setIntro] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [isRecruiter, setIsRecruiter] = useState<boolean>(false);
+  const [yearsOfExperience, setYearsOfExperience] = useState<string>("0");
+  const [role, setRole] = useState<string>("1");
+  const [image, setImage] = useState<string>("");
   const [categories, setCategories] = useState<Role[]>([]);
 
   const getCategories = async () => {
@@ -33,28 +34,36 @@ const CreateJobPage = () => {
     getCategories();
   }, []);
 
+  const uploadImg = async (e: React.ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
+    const file: File = (target.files as FileList)[0];
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "v5ovcvk4");
+
+    //post request to Cloudinary, remember to change to your own link
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_KEY}/image/upload`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+    const picture = await res.json();
+    setImage(picture.url); //put the url in local state, next step you can send it to the backend
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(
-      createJob({
-        title,
-        description,
-        duration,
-        paid,
-        amount,
-        location,
-        userId: user?.id,
-        categoryId: category,
+      editProfile({
+        profile: { name, intro, email, isRecruiter },
+        role: { yearsOfExperience, roleId: role, userId: user?.id },
+        image: { source: image, userId: user?.id },
       })
     );
 
-    setAmount("0");
-    setDescription("");
-    setTtile("");
-    setDuration("");
-    setPaid(false);
-    setLocation("");
-    navigate(`/jobs`);
+    navigate("/talents");
   };
 
   return (
@@ -160,4 +169,4 @@ const CreateJobPage = () => {
   );
 };
 
-export default CreateJobPage;
+export default EditProfilePage;

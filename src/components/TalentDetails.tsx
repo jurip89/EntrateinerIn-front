@@ -1,218 +1,214 @@
-import React,{useState,FC,useEffect,useRef} from 'react'
+import React, { useState, FC } from "react";
 import { deleteImg } from "../app/talents/slice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Spin } from "../components";
-import { Link, useNavigate } from "react-router-dom";
-import {  deleteImage,addReview} from "../app/talents/thunks";
+import { Link } from "react-router-dom";
+import { deleteImage, addReview } from "../app/talents/thunks";
+import moment from "moment";
 
 type JobProps = {
-  id: string |undefined,
-}
+  id: string | undefined;
+};
 const JobDetails: FC<JobProps> = (props) => {
-
   const dispatch = useAppDispatch();
-   const navigate = useNavigate();
+
   const talent = useAppSelector((state) => state.talents.talent);
   const loading = useAppSelector((state) => state.talents.isLoading);
   const user = useAppSelector((state) => state.auth.profile);
-  
+  const token = useAppSelector((state) => state.auth.token);
 
-  const [title, setTitle] = useState<string>('');
-  const [comment, setComment] = useState<string>('');
-  const [rating, setRating] = useState<string>('1')
-  
-  const idNumber: number = parseInt(props.id!);
+  const [title, setTitle] = useState<string>("");
+  const [comment, setComment] = useState<string>("");
+  const [rating, setRating] = useState<string>("1");
 
-  const maxScrollWidth = useRef<number>(0);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const carousel = useRef<HTMLDivElement>(null);
-
-  const movePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prevState) => prevState - 1);
-    }
-  };
-
-  const moveNext = () => {
-    if (
-      carousel.current !== null &&
-      carousel.current.offsetWidth * currentIndex <= maxScrollWidth.current
-    ) {
-      setCurrentIndex((prevState) => prevState + 1);
-    }
-  };
-
-  const isDisabled = (direction:string) => {
-    if (direction === 'prev') {
-      return currentIndex <= 0;
-    }
-
-    if (direction === 'next' && carousel.current !== null) {
-      return (
-        carousel.current.offsetWidth * currentIndex >= maxScrollWidth.current
-      );
-    }
-
-    return false;
-  };
-
-  useEffect(() => {
-    if (carousel !== null && carousel.current !== null) {
-      carousel.current.scrollLeft = carousel.current.offsetWidth * currentIndex;
-    }
-  }, [currentIndex]);
-
-  useEffect(() => {
-    maxScrollWidth.current = carousel.current
-      ? carousel.current.scrollWidth - carousel.current.offsetWidth
-      : 0;
-  }, []);
-    
-
-
-
-  const postReview = (e:React.FormEvent) => {
+  const postReview = (e: React.FormEvent) => {
     e.preventDefault();
-    const body = {title,comment,rating,receiverId:talent?.id!}
-    dispatch(addReview(body))
-    setComment('');
-    setTitle('');
-    setRating('1')
-  }
+    const body = {
+      title,
+      comment,
+      rating,
+      receiverId: talent?.id!,
+      authorId: user?.id,
+    };
+    dispatch(addReview(body));
+    setComment("");
+    setTitle("");
+    setRating("1");
+  };
 
- 
-  
   const destroy = (id: number) => {
     dispatch(deleteImage(id));
     dispatch(deleteImg(id));
   };
 
   return (
-    
     <div className="w-full">
       {loading ? (
         <Spin />
       ) : (
         <div className="my-20 grid grid-cols-6 ">
           <div></div>
-          
-            <div className=" col-span-4 border-2 border-gray-600 p-5 rounded-xl flex flex-col space-y-3">
-              <div className="flex flex-col">
-                <div
-                  className="w-40 h-40 rounded-full"
-                  style={{
-                    backgroundImage: `url(${talent?.profilePic})`,
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                />
-                <h2 className="text-5xl text-gray-600 my-auto">
-                  {talent?.name}
-                </h2>
-                {user?.id === idNumber && <button>Edit Profile</button>}
-              </div>
-              <div className="flex flex-col-reverse">
-                {talent?.roles.map((el) => (
-                  <div
-                    className="m-2 text-lg bg-indigo-400 text-white p-1 rounded-lg w-96"
-                    key={el.id}
-                  >
-                    <p>
-                      {el.name} with {el.userRoles.yearsOfExperience} years of
-                      experience
-                    </p>
-                  </div>
-                ))}
+          <div className="col-span-4 relative w-full mx-auto my-3">
+            <div className="flex flex-col justify-center items-center my-5">
+              <div
+                className={`w-40 h-40 bg-cover bg-center bg-no-repeat rounded-full`}
+                style={{ backgroundImage: `url(${talent?.profilePic})` }}
+              ></div>
+              <span className="my-3">{talent?.name}</span>
+
+              <div className="flex gap-10 text-sm">
+                <div className="flex flex-col items-center">
+                  <span className="font-bold">{talent?.reviews?.length}</span>
+                  <span>Reviews</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="font-bold">1.20 K</span>
+                  <span>Followers</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="font-bold">100 K</span>
+                  <span>Likes</span>
+                </div>
               </div>
 
-              <div>
-                <p className="text-lg">{talent?.intro}</p>
-              </div>
-              <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 m-auto gap-5">
-                <div className="carousel my-12 mx-auto">
-      
-      <div className="relative overflow-hidden">
-        <div className="flex justify-between absolute top left h-full">
-          <button
-            onClick={movePrev}
-            className="hover:bg-blue-900/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
-            disabled={isDisabled('prev')}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-20 -ml-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span className="sr-only">Prev</span>
-          </button>
-          <button
-            onClick={moveNext}
-            className="hover:bg-blue-900/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
-            disabled={isDisabled('next')}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-20 -ml-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-            <span className="sr-only">Next</span>
-          </button>
-        </div>
-        <div
-          ref={carousel}
-          className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
-        >
-          {talent?.images.map((resource, index) => {
-            return (
-              <div
-                key={index}
-                className="carousel-item text-center relative w-64 h-64 snap-start"
-              >
+              {user?.id === talent?.id && (
+                <Link
+                  to={`/talents/${talent?.id}/edit`}
+                  className="my-5 px-5 py-2 font-semibold text-sm border border-gray-400"
+                >
+                  Edit profile
+                </Link>
+              )}
+
+              <p className="mb-3">{talent?.intro}</p>
+            </div>
+
+            <div className="grid grid-cols-4 gap-0.5 mt-2">
+              {talent?.images?.map((el) => (
                 <div
-                  
-                  className="h-full w-full aspect-square block bg-origin-padding bg-left-top bg-cover bg-no-repeat z-0"
-                  style={{ backgroundImage: `url(${resource.source|| ''})` }}
-                >{user?.id === idNumber && (
-                      <button
-                        className="bg-white m-auto w-8 h-8"
-                        onClick={() => destroy(resource.id)}
+                  className={`relative w-full h-60 bg-cover bg-center bg-no-repeat`}
+                  style={{ backgroundImage: `url(${el?.source})` }}
+                  key={el?.id}
+                  //   style="background-image: url('https://sf-tk-sg.ibytedtos.com/obj/tiktok-web-sg/tt-sg-article-cover-351970d5103b996fbe9ddc67f6d668cc.gif');"
+                >
+                  {/* <!-- small player with views --> */}
+                  {user?.id === talent.id && (
+                    <div
+                      onClick={() => destroy(el.id)}
+                      className="absolute bottom-1 rounded-full bg-white left-1 flex gap-1 text-white text-xs items-center"
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        version="1.1"
+                        id="Layer_1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        width="122.881px"
+                        height="122.88px"
+                        viewBox="0 0 122.881 122.88"
+                        enableBackground="new 0 0 122.881 122.88"
+                        xmlSpace="preserve"
                       >
-                        X
-                      </button>
-                    )}
-                  <img
-                    src={resource.source || ''}
-                    alt={''}
-                    className="w-full aspect-square hidden"
-                  />
+                        <g>
+                          <path d="M61.44,0c16.966,0,32.326,6.877,43.445,17.996c11.119,11.118,17.996,26.479,17.996,43.444 c0,16.967-6.877,32.326-17.996,43.444C93.766,116.003,78.406,122.88,61.44,122.88c-16.966,0-32.326-6.877-43.444-17.996 C6.877,93.766,0,78.406,0,61.439c0-16.965,6.877-32.326,17.996-43.444C29.114,6.877,44.474,0,61.44,0L61.44,0z M80.16,37.369 c1.301-1.302,3.412-1.302,4.713,0c1.301,1.301,1.301,3.411,0,4.713L65.512,61.444l19.361,19.362c1.301,1.301,1.301,3.411,0,4.713 c-1.301,1.301-3.412,1.301-4.713,0L60.798,66.157L41.436,85.52c-1.301,1.301-3.412,1.301-4.713,0c-1.301-1.302-1.301-3.412,0-4.713 l19.363-19.362L36.723,42.082c-1.301-1.302-1.301-3.412,0-4.713c1.301-1.302,3.412-1.302,4.713,0l19.363,19.362L80.16,37.369 L80.16,37.369z M100.172,22.708C90.26,12.796,76.566,6.666,61.44,6.666c-15.126,0-28.819,6.13-38.731,16.042 C12.797,32.62,6.666,46.314,6.666,61.439c0,15.126,6.131,28.82,16.042,38.732c9.912,9.911,23.605,16.042,38.731,16.042 c15.126,0,28.82-6.131,38.732-16.042c9.912-9.912,16.043-23.606,16.043-38.732C116.215,46.314,110.084,32.62,100.172,22.708 L100.172,22.708z" />
+                        </g>
+                      </svg>
+                    </div>
+                  )}
                 </div>
-                
-              </div>
-            );
-          })}
+              ))}
+            </div>
+            <div
+              className={
+                token && user?.id !== talent?.id
+                  ? "grid grid-cols-2 w-full gap-6"
+                  : "grid grid-cols-1 w-full"
+              }
+            >
+              {token && user?.id !== talent?.id && (
+                <form
+                  onSubmit={postReview}
+                  className="flex border-t-2 border-t-gray-300 my-6  flex-col p-6 space-y-6 md:py-0 md:px-6 ng-untouched ng-pristine ng-valid"
+                >
+                  <label className="block pt-4">
+                    <span className="mb-1">Title</span>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1">Review</span>
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      rows={3}
+                      className="block w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
+                    ></textarea>
+                  </label>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange2" className="form-label">
+                      Rating
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                      className="range range-primary"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="py-2 px-4 mx-auto mb-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                  >
+                    Review
+                  </button>
+                </form>
+              )}
+              <section className="w-full mx-auto">
+                <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-2 lg:px-6">
+                  <h2 className="text-lg font-bold sm:text-2xl">Reviews</h2>
+                </div>
+
+                <div className="mt-8 grid grid-cols-1 gap-x-16 gap-y-12">
+                  {talent.reviews.map((el) => (
+                    <blockquote key={el.id} className="border-2 p-6 rounded-lg">
+                      <header className="sm:flex sm:items-center">
+                        <p className="mt-2 font-medium sm:ml-4 sm:mt-0">
+                          {el.title} {el.rating}/5
+                        </p>
+                      </header>
+
+                      <p className="mt-2 text-gray-700">{el.comment}</p>
+
+                      <footer className="mt-4">
+                        <p className="text-xs text-gray-500">
+                          <Link to={`/talents/${el?.authorReview?.id}`}>
+                            {el?.authorReview?.name}{" "}
+                          </Link>
+                          - {moment(el?.upddatedAt).format("DD-MM-YYYY")}
+                        </p>
+                      </footer>
+                    </blockquote>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
-              </div>
-              <div>
+  );
+};
+
+{
+  /* <div>
                 <h4 className="text-xl">Reviews:</h4>
                   <div>
                     {idNumber !== user?.id &&<form onSubmit={postReview} className='w-1/2 flex flex-col my-5'>
@@ -236,15 +232,6 @@ const JobDetails: FC<JobProps> = (props) => {
                       </div>
                     ))}
                 </div>
-              </div>
-            </div>
-            
-        </div>
-      )}
-    </div>
-  )
+              </div> */
 }
-
-
-
-export default JobDetails
+export default JobDetails;
