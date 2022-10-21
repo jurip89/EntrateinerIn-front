@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector,useAppDispatch } from "../app/hooks";
 import { URL } from "../utils";
-import { deleteJob } from "../app/jobs/thunks";
+import { deleteJob,hire,reject } from "../app/jobs/thunks";
 import axios from "axios";
 import { Spin, MapDetail } from "../components";
 const JobDetail = () => {
@@ -11,8 +11,9 @@ const JobDetail = () => {
   const loading = useAppSelector((state) => state.jobs.isLoading);
   const user = useAppSelector((state) => state.auth.profile);
   const token = useAppSelector((state) => state.auth.token);
-
+  const dispatch =useAppDispatch()
   const job = useAppSelector((state) => state.jobs.job);
+  console.log(job)
 
   const apply = async (id: string | number | undefined) => {
     if (!token) {
@@ -103,15 +104,18 @@ const JobDetail = () => {
                                     </p>
                                   </td>
                                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                    <button className="text-gray-900 whitespace-no-wrap m-auto">
+                                    <button onClick={()=>dispatch(hire(el?.applicants.id))} className="text-gray-900 hover:bg-green-200 p-1 rounded-full whitespace-no-wrap m-auto">
                                       Hire
+                                    </button>
+                                    <button onClick={()=>dispatch(reject(el.applicants.id))} className="text-gray-900 mx-2 hover:bg-red-300 whitespace-no-wrap p-1 rounded-full m-auto">
+                                      Reject
                                     </button>
                                   </td>
                                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                       <span
                                         aria-hidden="true"
-                                        className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
+                                        className={`absolute inset-0 ${el?.applicants?.status.startsWith('pending')?'bg-yellow-300' :'bg-green-200'} opacity-50 rounded-full` }
                                       ></span>
                                       <span className="relative">
                                         {el?.applicants?.status}
@@ -154,6 +158,22 @@ const JobDetail = () => {
                           className="ml-3 block rounded bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-400"
                         >
                           Apply
+                        </button>
+                      )}
+                      {job?.user.email === user?.email && (
+                        <button
+                          onClick={() => {
+                            deleteJob(job?.id!);
+                            navigate("/jobs");
+                          }}
+                          className="ml-3 block rounded my-4 bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-400"
+                        >
+                          Delete
+                        </button>
+                      )}
+                      {job?.user.email === user?.email && (
+                        <button className="ml-3 block rounded my-4 bg-indigo-600 px-5 py-3 text-xs font-medium text-white hover:bg-indigo-400">
+                          <Link to={`/jobs/${job?.id}/edit`}>Edit</Link>
                         </button>
                       )}
                     </div>

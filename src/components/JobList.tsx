@@ -40,7 +40,7 @@ const JobList = () => {
                     <span className="mx-4 text-lg font-normal">Map</span>
                     <span className="flex-grow text-right"></span>
                   </button>
-                  {user && user?.isRecruiter && (
+                  {user?.isRecruiter && (
                     <Link
                       to="/jobs/create"
                       className="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors duration-200  text-gray-600 rounded-lg"
@@ -99,7 +99,7 @@ const JobList = () => {
                               </Link>
                             )}
                             <p className="text-gray-500 mt-2 pr-2">
-                              {el.description}
+                              {el?.description.length > 250 ? `${el?.description.slice(0,250)}...`:el?.description }
                             </p>
                           </div>
                           <div className="mt-5 space-y-4 text-sm sm:mt-0 sm:space-y-2">

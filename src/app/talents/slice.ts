@@ -1,6 +1,13 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import { talentsThunk, getOneTalentThunk, deleteImage,addReview} from "./thunks";
+import {
+  talentsThunk,
+  getOneTalentThunk,
+  deleteImage,
+  addReview,
+  deleteReview,
+  changeProfilePic,
+} from "./thunks";
 import { createSlice } from "@reduxjs/toolkit";
 
 type Image = {
@@ -70,14 +77,7 @@ const initialState: InitialStateObj = {
 export const talentSlice = createSlice({
   name: "talents",
   initialState,
-  reducers: {
-    deleteImg: (state, action) => {
-      const newImgs = [...state.talent.images].filter(
-        (el) => el.id !== action.payload
-      );
-      state.talent.images = newImgs;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(talentsThunk.pending, (state) => {
       state.isLoading = true;
@@ -105,23 +105,74 @@ export const talentSlice = createSlice({
     builder.addCase(getOneTalentThunk.rejected, (state) => {
       state.isError = true;
     });
-    builder.addCase(addReview.pending, state => {
+    builder.addCase(addReview.pending, (state) => {
       state.isLoading = true;
       state.isError = false;
     });
-    builder.addCase(addReview.fulfilled, (state, action: PayloadAction<Review>) => {
-      const newReviews = [action.payload, ...state.talent.reviews];
-      state.talent.reviews = newReviews;
-      state.isLoading = false;
-      state.isError = false;
-    });
-    builder.addCase(addReview.rejected, state => {
+    builder.addCase(
+      addReview.fulfilled,
+      (state, action: PayloadAction<Review>) => {
+        state.isLoading = true;
+
+        const newReviews = [action.payload, ...state.talent.reviews];
+        state.talent.reviews = newReviews;
+
+        state.isError = false;
+        state.isLoading = false;
+      }
+    );
+    builder.addCase(addReview.rejected, (state) => {
       state.isError = true;
       state.isLoading = false;
     });
-    
+    builder.addCase(deleteReview.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(deleteReview.fulfilled, (state, action) => {
+      const newState = [...state?.talent?.reviews].filter(
+        (el) => el?.id !== action.payload
+      );
+
+      state.talent.reviews = newState;
+      state.isLoading = false;
+      state.isError = false;
+    });
+    builder.addCase(deleteReview.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+    builder.addCase(deleteImage.pending, (state) => {
+      state.isError = false;
+      state.isLoading = true;
+    });
+    builder.addCase(deleteImage.fulfilled, (state, action) => {
+      state.isError = false;
+      const newImgs = [...state.talent.images].filter(
+        (el) => el.id !== action.payload
+      );
+      state.talent.images = newImgs;
+      state.isLoading = false;
+    });
+    builder.addCase(deleteImage.rejected, (state) => {
+      state.isError = true;
+      state.isLoading = false;
+    });
+    builder.addCase(changeProfilePic.pending, (state) => {
+      state.isError = false;
+      state.isLoading = true;
+    });
+    builder.addCase(changeProfilePic.fulfilled, (state, action) => {
+      state.isError = false;
+      state.talent.profilePic = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(changeProfilePic.rejected, (state) => {
+      state.isError = true;
+      state.isLoading = false;
+    });
   },
 });
 
-export const { deleteImg } = talentSlice.actions;
+//export const {  } = talentSlice.actions;
 export default talentSlice.reducer;
