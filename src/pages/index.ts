@@ -10,4 +10,4 @@ export { default as EditJob } from "./EditJobPage";
 export { default as MyJobsRecruiter } from "./MyJobsPageRecruiter";
 export { default as MyJobsTalent } from "./MyJobsPageTalent";
 export { default as MyJobsRecruiterD } from "./MyJobsPageRecruiterDetails";
-export { default as EditProfile } from "./EditJobPage";
+export { default as EditProfile } from "./EditProfilePage";

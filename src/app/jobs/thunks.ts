@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 import { URL, MAP_BOX_KEY } from "../../utils";
 
 type Job = {
@@ -139,3 +140,27 @@ export const updateJob = createAsyncThunk(
     }
   }
 );
+
+export const hire = createAsyncThunk('jobs/hire', async (id:string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.patch(`${URL}/apply/${id}`,{status:'Selected'},{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  return res.data
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+export const reject = createAsyncThunk('jobs/reject',async (id:string) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`${URL}/apply/${id}`,{
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  return id
+  } catch (error) {
+    console.log(error)
+  }
+})

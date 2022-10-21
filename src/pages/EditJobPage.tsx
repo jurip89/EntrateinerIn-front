@@ -34,15 +34,15 @@ const EditJobPage = () => {
   const [category, setCategory] = useState<string | number>(job?.role?.name!);
   const [categories, setCategories] = useState<Role[]>([]);
 
-  const setAll = () => {
-    setTtile(job?.title!);
-    setDescription(job?.description!);
-    setAmount(job?.amount!);
-    setCategory(job?.role?.id!);
-    setLocation(job?.location!);
-    setPaid(job?.paid!);
-    setDuration(job?.duration!);
-  };
+  // const setAll = () => {
+  //   setTtile(job?.title!);
+  //   setDescription(job?.description!);
+  //   setAmount(job?.amount!);
+  //   setCategory(job?.role?.id!);
+  //   setLocation(job?.location!);
+  //   setPaid(job?.paid!);
+  //   setDuration(job?.duration!);
+  // };
 
   useEffect(() => {
     if (!token) {
@@ -79,7 +79,7 @@ const EditJobPage = () => {
         <div className="w-full h-screen">
           <div className="flex flex-col my-14 mx-auto max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
             <div className="self-center mb-2 text-xl font-light text-gray-800 sm:text-2xl dark:text-white">
-              Create a new job
+              Edit Job
             </div>
 
             <div className="p-6 mt-8">
@@ -141,7 +141,22 @@ const EditJobPage = () => {
                       />
                     </div>
                   )}
-                </div>
+                  </div>
+                  <div className="flex flex-col mb-2">
+              <div className=" relative ">
+                <input
+                  type="text"
+                  id="create-account-last-name"
+                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  name="Last name"
+                  placeholder="Duration"
+                  value={duration}
+                  onChange={(e) => {
+                    setDuration(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
                 <div className="flex flex-col mb-2">
                   <div className=" relative ">
                     <input
@@ -160,7 +175,7 @@ const EditJobPage = () => {
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   {categories.map((el) => (
-                    <option key={el.id}>{el.name}</option>
+                    <option key={el.id} value={el?.id }>{el.name}</option>
                   ))}
                 </select>
                 <div className="flex w-full my-4">
@@ -168,7 +183,7 @@ const EditJobPage = () => {
                     type="submit"
                     className="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
                   >
-                    Create
+                    Edit
                   </button>
                 </div>
               </form>

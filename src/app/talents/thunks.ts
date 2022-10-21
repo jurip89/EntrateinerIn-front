@@ -66,9 +66,25 @@ export const addReview = createAsyncThunk(
       const res = await axios.post(`${URL}/reviews`, review, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       return res.data;
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+export const deleteReview = createAsyncThunk(
+  "talent/delteReview",
+  async (id: string | number) => {
+    try {
+      const token: string | null = localStorage.getItem("token");
+      await axios.delete(`${URL}/reviews/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return id;
+    } catch (e) {
+      console.log(e);
     }
   }
 );
@@ -79,10 +95,10 @@ type Image = {
 };
 
 type Profile = {
-  name: string;
-  email: string;
-  intro: string;
-  isRecruiter: boolean;
+  name: string | undefined;
+  email: string | undefined;
+  intro: string | undefined;
+  isRecruiter: boolean | undefined;
 };
 
 type Role = {
@@ -92,6 +108,7 @@ type Role = {
 };
 
 type Body = {
+  id: string | number | undefined;
   profile: Profile;
   image: Image;
   role: Role;
@@ -101,9 +118,19 @@ export const editProfile = createAsyncThunk(
   "talent/edit",
   async (body: Body) => {
     try {
-      const resProfile = await axios.patch(`${URL}/talents`, body.profile);
-      const resImage = await axios.post(`${URL}/images`, body.image);
-      const resRole = await axios.post(`${URL}/roles`, body.role);
+      const token: string | null = localStorage.getItem("token");
+      const [resImage, resRole, resProfile] = await Promise.all([
+        axios.post(`${URL}/images`, body.image, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.post(`${URL}/roles`, body.role, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.patch(`${URL}/talents/${body.id}`, body.profile, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
       return {
         profile: resProfile.data,
         image: resImage.data,
@@ -111,6 +138,28 @@ export const editProfile = createAsyncThunk(
       };
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+type Img = {
+  id: number;
+  profilePic: string;
+};
+
+export const changeProfilePic = createAsyncThunk(
+  "talents/profilePic",
+  async (img: Img) => {
+    try {
+       const token: string | null = localStorage.getItem("token");
+      const res = await axios.patch(`${URL}/talents/${img.id}`, {profilePic:img.profilePic}, {
+          headers: { Authorization: `Bearer ${token}` },
+      })
+      console.log(res.data)
+      return res.data
+      
+    } catch (error) {
+      
     }
   }
 );

@@ -1,9 +1,14 @@
 import React, { useState, FC } from "react";
-import { deleteImg } from "../app/talents/slice";
+
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Spin } from "../components";
 import { Link } from "react-router-dom";
-import { deleteImage, addReview } from "../app/talents/thunks";
+import {
+  deleteImage,
+  addReview,
+  deleteReview,
+  changeProfilePic,
+} from "../app/talents/thunks";
 import moment from "moment";
 
 type JobProps = {
@@ -38,7 +43,6 @@ const JobDetails: FC<JobProps> = (props) => {
 
   const destroy = (id: number) => {
     dispatch(deleteImage(id));
-    dispatch(deleteImg(id));
   };
 
   return (
@@ -80,18 +84,16 @@ const JobDetails: FC<JobProps> = (props) => {
                 </Link>
               )}
 
-              <p className="mb-3">{talent?.intro}</p>
+              <p className="my-24">{talent?.intro}</p>
             </div>
 
             <div className="grid grid-cols-4 gap-0.5 mt-2">
               {talent?.images?.map((el) => (
                 <div
-                  className={`relative w-full h-60 bg-cover bg-center bg-no-repeat`}
+                  className={`relative w-full h-60 bg-cover rounded-lg bg-center bg-no-repeat`}
                   style={{ backgroundImage: `url(${el?.source})` }}
                   key={el?.id}
-                  //   style="background-image: url('https://sf-tk-sg.ibytedtos.com/obj/tiktok-web-sg/tt-sg-article-cover-351970d5103b996fbe9ddc67f6d668cc.gif');"
                 >
-                  {/* <!-- small player with views --> */}
                   {user?.id === talent.id && (
                     <div
                       onClick={() => destroy(el.id)}
@@ -117,6 +119,42 @@ const JobDetails: FC<JobProps> = (props) => {
                       </svg>
                     </div>
                   )}
+                  {user?.id === talent.id && (
+                    <button
+                      onClick={() =>
+                        dispatch(changeProfilePic({ id: talent.id, profilePic: el.source }))
+                      }
+                      className="absolute bottom-1 rounded-full bg-white right-1 flex gap-1 text-white text-xs items-center"
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        version="1.1"
+                        id="Capa_1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 187.879 187.879"
+                        //style="enable-background:new 0 0 187.879 187.879;"
+                        xmlSpace="preserve"
+                      >
+                        <g>
+                          <path
+                            d="M93.946,50.173c13.833,0,25.087-11.254,25.087-25.087C119.033,11.254,107.779,0,93.946,0
+		C80.114,0,68.86,11.254,68.86,25.086C68.86,38.919,80.114,50.173,93.946,50.173z M93.946,15c5.562,0,10.087,4.525,10.087,10.086
+		c0,5.562-4.525,10.087-10.087,10.087S83.86,30.648,83.86,25.086C83.86,19.525,88.385,15,93.946,15z"
+                          />
+                          <path
+                            d="M123.127,61.76c-3.018-3.421-7.363-5.384-11.925-5.384H76.677c-4.558,0-8.9,1.959-11.917,5.375
+		c-3.017,3.416-4.423,7.969-3.859,12.491l13.35,107.065c0.468,3.754,3.659,6.572,7.442,6.572h24.348
+		c3.779,0,6.969-2.812,7.441-6.562l13.494-107.053C127.546,69.739,126.144,65.181,123.127,61.76z M99.426,172.879h-11.11
+		L75.785,72.386c-0.033-0.267,0.04-0.504,0.218-0.706c0.179-0.202,0.405-0.304,0.674-0.304h34.525c0.269,0,0.495,0.103,0.674,0.304
+		c0.178,0.202,0.251,0.439,0.217,0.707L99.426,172.879z"
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -130,28 +168,29 @@ const JobDetails: FC<JobProps> = (props) => {
               {token && user?.id !== talent?.id && (
                 <form
                   onSubmit={postReview}
-                  className="flex border-t-2 border-t-gray-300 my-6  flex-col p-6 space-y-6 md:py-0 md:px-6 ng-untouched ng-pristine ng-valid"
+                  className="flex border-t-1 border-t-gray-300 my-6 w-1/2 mx-auto flex-col p-6 space-y-6 md:py-0 md:px-6 ng-untouched ng-pristine ng-valid"
                 >
                   <label className="block pt-4">
-                    <span className="mb-1">Title</span>
+                    
                     <input
-                      type="text"
+                        type="text"
+                        placeholder="Title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-1">Review</span>
                     <textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      rows={3}
+                        rows={3}
+                        placeholder='Comment Here'
                       className="block w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
                     ></textarea>
                   </label>
                   <div className="relative pt-1">
-                    <label htmlFor="customRange2" className="form-label">
+                    <label htmlFor="customRange2" className="form-label mr-12 w-full">
                       Rating
                     </label>
                     <input
@@ -171,29 +210,40 @@ const JobDetails: FC<JobProps> = (props) => {
                   </button>
                 </form>
               )}
+
               <section className="w-full mx-auto">
-                <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-2 lg:px-6">
-                  <h2 className="text-lg font-bold sm:text-2xl">Reviews</h2>
-                </div>
+                {talent.reviews.length > 0 && (
+                  <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-2 lg:px-6">
+                    <h2 className="text-lg font-bold sm:text-2xl">Reviews</h2>
+                  </div>
+                )}
 
                 <div className="mt-8 grid grid-cols-1 gap-x-16 gap-y-12">
-                  {talent.reviews.map((el) => (
-                    <blockquote key={el.id} className="border-2 p-6 rounded-lg">
+                  {talent?.reviews.map((el) => (
+                    <blockquote
+                      key={el?.id}
+                      className="border-1 p-4 rounded-lg"
+                    >
                       <header className="sm:flex sm:items-center">
-                        <p className="mt-2 font-medium sm:ml-4 sm:mt-0">
-                          {el.title} {el.rating}/5
+                        <p className="mt-2 font-medium sm:mt-0">
+                          {el?.title.toUpperCase()} {el?.rating}/5
                         </p>
                       </header>
 
-                      <p className="mt-2 text-gray-700">{el.comment}</p>
+                      <p className="mt-2 text-gray-700">{el?.comment}</p>
 
-                      <footer className="mt-4">
+                      <footer className="mt-4 flex flex-row justify-between">
                         <p className="text-xs text-gray-500">
                           <Link to={`/talents/${el?.authorReview?.id}`}>
                             {el?.authorReview?.name}{" "}
                           </Link>
                           - {moment(el?.upddatedAt).format("DD-MM-YYYY")}
                         </p>
+                        {el?.authorReview?.id === user?.id && (
+                          <button onClick={() => dispatch(deleteReview(el.id))}>
+                            Delete
+                          </button>
+                        )}
                       </footer>
                     </blockquote>
                   ))}
@@ -207,31 +257,4 @@ const JobDetails: FC<JobProps> = (props) => {
   );
 };
 
-{
-  /* <div>
-                <h4 className="text-xl">Reviews:</h4>
-                  <div>
-                    {idNumber !== user?.id &&<form onSubmit={postReview} className='w-1/2 flex flex-col my-5'>
-                      <h4>Add a review</h4>
-                      <input type="text" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder='Title'/>
-                      <input type="text" value={comment} onChange={(e)=>setComment(e.target.value)} placeholder='Comment'/>
-                      <input type="range" min='1' max='5' value={rating} onChange={(e) => setRating(e.target.value)} />
-                      <button type="submit">Submit!</button>
-                    </form>}
-                    
-                    
-                  {talent.reviews.length < 1? <p>No reviews yet</p>: 
-                    talent.reviews.map((el) => (
-                      <div key={el?.id} className="text-lg">
-                        <h5 className="text-xl my-4">{el?.title}</h5>
-                        <p >{el?.comment}</p>
-                        <p>
-                          Posted By:{" "}
-                          <Link to={`/talents/${el?.authorReview?.id}`}>{el?.authorReview.name}</Link>
-                        </p>
-                      </div>
-                    ))}
-                </div>
-              </div> */
-}
 export default JobDetails;

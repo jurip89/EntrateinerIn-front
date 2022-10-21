@@ -97,15 +97,15 @@ const CreateJobPage = () => {
             <div className="flex gap-4 mb-2">
               <div className=" relative ">
                 <label className="flex items-center space-x-3 mb-3">
+                  <span className="text-gray-700 dark:text-white font-normal">
+                    Paid
+                  </span>
                   <input
                     type="checkbox"
                     checked={paid}
                     onChange={() => setPaid(!paid)}
                     className="form-tick appearance-none bg-white bg-check h-6 w-6 border border-gray-300 rounded-md checked:bg-green-500 checked:border-transparent focus:outline-none"
                   />
-                  <span className="text-gray-700 dark:text-white font-normal">
-                    Paid
-                  </span>
                 </label>
               </div>
               {paid && (
@@ -128,6 +128,21 @@ const CreateJobPage = () => {
               <div className=" relative ">
                 <input
                   type="text"
+                  id="create-account-last-name"
+                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  name="Last name"
+                  placeholder="Duration"
+                  value={duration}
+                  onChange={(e) => {
+                    setDuration(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col mb-2">
+              <div className=" relative ">
+                <input
+                  type="text"
                   className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   placeholder="Location"
                   value={location}
@@ -142,7 +157,7 @@ const CreateJobPage = () => {
               onChange={(e) => setCategory(e.target.value)}
             >
               {categories.map((el) => (
-                <option key={el.id}>{el.name}</option>
+                <option key={el.id} value={el?.id }>{el.name}</option>
               ))}
             </select>
             <div className="flex w-full my-4">
