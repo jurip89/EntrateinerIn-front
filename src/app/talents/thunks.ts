@@ -119,17 +119,16 @@ export const editProfile = createAsyncThunk(
   async (body: Body) => {
     try {
       const token: string | null = localStorage.getItem("token");
-      const [resImage, resRole, resProfile] = await Promise.all([
-        axios.post(`${URL}/images`, body.image, {
+
+      const resImage = await axios.post(`${URL}/images`, body.image);
+      const resRole = await axios.post(`${URL}/roles`, body.role);
+      const resProfile = await axios.patch(
+        `${URL}/talents/${body.id}`,
+        body.profile,
+        {
           headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.post(`${URL}/roles`, body.role, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.patch(`${URL}/talents/${body.id}`, body.profile, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+        }
+      );
 
       return {
         profile: resProfile.data,
@@ -151,15 +150,16 @@ export const changeProfilePic = createAsyncThunk(
   "talents/profilePic",
   async (img: Img) => {
     try {
-       const token: string | null = localStorage.getItem("token");
-      const res = await axios.patch(`${URL}/talents/${img.id}`, {profilePic:img.profilePic}, {
+      const token: string | null = localStorage.getItem("token");
+      const res = await axios.patch(
+        `${URL}/talents/${img.id}`,
+        { profilePic: img.profilePic },
+        {
           headers: { Authorization: `Bearer ${token}` },
-      })
-      console.log(res.data)
-      return res.data
-      
-    } catch (error) {
-      
-    }
+        }
+      );
+      console.log(res.data);
+      return res.data;
+    } catch (error) {}
   }
 );
