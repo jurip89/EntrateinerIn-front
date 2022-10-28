@@ -1,46 +1,47 @@
-# Getting Started with Create React App
+# EntrateinerIn 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
 
-## Available Scripts
+This is website is a job platform for perople in the entrateinment industry, there are two types of users when logged in: recruiters and applicants.
 
-In the project directory, you can run:
+## Visitor
+- Can browse for talents and jobs
+- Can visualize details of the job and details of talent
 
-### `npm start`
+## Recruiter
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### When logged in 
+- Can browse for talents and jobs
+- Can visualize details of the job and details of talent
+- Can visualize details of the job and details of talent
+- Can Post Delete Edit a job
+- Can select candidates that applied for the jobs
+- Can review candidates that has been working with
+- Can visualize all the jobs posted 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Talent
 
-### `npm test`
+### When logged in
+- Can browse for talents and jobs
+- Can edit the prfoile adding images and roles with years of experience;
+- Can review collegues or employers
+- Can Apply for jobs 
+- Can visualize the list of all jobs applied
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Thech used
 
-### `npm run build`
+This Website has been developed with create-react-app --temeplate redux typescript
+I created this app for practice my skills with typescrypt react and redux.
+I added cloudinary for adding images saved as url and mapbox for the map in the job page and in the job detail page
+Styled with Tailwind.css
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Features needed to implement
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Users can comunicate with email (I would implement this feature using nodemailer)
+- Users get notified with mail when applied for job the applicant and the recruter 
+- User get notified with email when selected or rejected for a job
+- User recruiter can contact directly a talent to propose a job
+- User can accept or reject a job proposal  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Backend 
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The repository named EntrateinerIn-back is the Back-end of this app
