@@ -44,4 +44,4 @@ Styled with Tailwind.css
 
 ## Backend 
 
-The repository named EntrateinerIn-back is the Back-end of this app
+[Backend code](https://github.com/jurip89/EntrateinerIn-back)
