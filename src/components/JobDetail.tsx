@@ -13,7 +13,7 @@ const JobDetail = () => {
   const token = useAppSelector((state) => state.auth.token);
   const dispatch =useAppDispatch()
   const job = useAppSelector((state) => state.jobs.job);
-  console.log(job)
+  
 
   const apply = async (id: string | number | undefined) => {
     if (!token) {

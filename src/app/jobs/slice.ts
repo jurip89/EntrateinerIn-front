@@ -126,7 +126,7 @@ const jobsSlice = createSlice({
     });
     builder.addCase(createJob.fulfilled, (state, action) => {
       state.job = action.payload;
-      console.log(action.payload);
+  
       //state.jobs = [action.payload, ...state.jobs];
       state.isLoading = false;
       state.isError = false;
@@ -183,7 +183,7 @@ const jobsSlice = createSlice({
     });
     builder.addCase(hire.fulfilled, (state, action) => {
       state.isError = false;
-      console.log(action.payload)
+    
       //const newState = state.job?.applicantsJob.find((el) => el.applicants.id === action.payload);
       state.isLoading = false;
     });
