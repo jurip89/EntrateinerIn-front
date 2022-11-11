@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { MAP_BOX_KEY } from "../utils";
 import Map, {Marker} from 'react-map-gl';
 
-
 interface MapProps{
     lat:   number |undefined
     lng: number |undefined
