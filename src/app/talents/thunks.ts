@@ -158,7 +158,7 @@ export const changeProfilePic = createAsyncThunk(
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(res.data);
+     
       return res.data;
     } catch (error) {}
   }

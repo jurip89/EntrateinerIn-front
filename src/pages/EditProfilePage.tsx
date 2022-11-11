@@ -15,7 +15,7 @@ const EditProfilePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.profile);
-console.log(user)
+
   const [name, setName] = useState<string |undefined>(user?.name);
   const [intro, setIntro] = useState<string |undefined >(user?.intro!);
   const [email, setEmail] = useState<string|undefined>(user?.email);
@@ -50,19 +50,14 @@ console.log(user)
       }
     );
     const picture = await res.json();
-    console.log(picture)
+    
     setImage(picture.url); //put the url in local state, next step you can send it to the backend
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     !yearsOfExperience && setYearsOfExperience('0')
-    console.log({
-        id:user?.id,
-        profile: { name, intro, email, isRecruiter },
-        role: { yearsOfExperience, roleId: role, userId: user?.id },
-        image: { source: image, userId: user?.id },
-      })
+   
     dispatch(
       editProfile({
         id:user?.id,

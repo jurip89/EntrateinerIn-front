@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+ 
 const HomePage = () => {
   return <section
   className="relative bg-[url(https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80)] bg-cover bg-center bg-no-repeat"
->
+  >
   <div
     className="absolute inset-0 bg-white/75 sm:bg-transparent sm:bg-gradient-to-r sm:from-white/50 sm:to-white/25"
   ></div>
