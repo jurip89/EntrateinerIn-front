@@ -7,6 +7,12 @@ import { MAP_BOX_KEY } from "../utils";
 import Map, { Marker } from "react-map-gl";
 import cinema from "../cinema.png";
 import { Spin } from "./index";
+// @ts-ignore
+import mapboxgl from "mapbox-gl";
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass =
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default; /* eslint import/no-webpack-loader-syntax: off */
 
 const JobList = () => {
   const dispatch = useAppDispatch();
