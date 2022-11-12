@@ -25,6 +25,7 @@ const JobDetails: FC<JobProps> = (props) => {
   const [title, setTitle] = useState<string>("");
   const [comment, setComment] = useState<string>("");
   const [rating, setRating] = useState<string>("1");
+  const [openReview,setOpenReview]= useState<boolean>(false)
 
   const postReview = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +88,7 @@ const JobDetails: FC<JobProps> = (props) => {
               <p className="my-24">{talent?.intro}</p>
             </div>
 
-            <div className="grid grid-cols-4 gap-0.5 mt-2">
+            <div className="grid lg:grid-cols-4 sm:grid-cols-1 gap-0.5 mt-2">
               {talent?.images?.map((el) => (
                 <div
                   className={`relative w-full h-60 bg-cover rounded-lg bg-center bg-no-repeat`}
@@ -122,7 +123,12 @@ const JobDetails: FC<JobProps> = (props) => {
                   {user?.id === talent.id && (
                     <button
                       onClick={() =>
-                        dispatch(changeProfilePic({ id: talent.id, profilePic: el.source }))
+                        dispatch(
+                          changeProfilePic({
+                            id: talent.id,
+                            profilePic: el.source,
+                          })
+                        )
                       }
                       className="absolute bottom-1 rounded-full bg-white right-1 flex gap-1 text-white text-xs items-center"
                     >
@@ -158,59 +164,7 @@ const JobDetails: FC<JobProps> = (props) => {
                 </div>
               ))}
             </div>
-            <div
-              className={
-                token && user?.id !== talent?.id
-                  ? "grid grid-cols-2 w-full gap-6"
-                  : "grid grid-cols-1 w-full"
-              }
-            >
-              {token && user?.id !== talent?.id && (
-                <form
-                  onSubmit={postReview}
-                  className="flex border-t-1 border-t-gray-300 my-6 w-1/2 mx-auto flex-col p-6 space-y-6 md:py-0 md:px-6 ng-untouched ng-pristine ng-valid"
-                >
-                  <label className="block pt-4">
-                    
-                    <input
-                        type="text"
-                        placeholder="Title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
-                    />
-                  </label>
-                  <label className="block">
-                    <textarea
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                        rows={3}
-                        placeholder='Comment Here'
-                      className="block w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
-                    ></textarea>
-                  </label>
-                  <div className="relative pt-1">
-                    <label htmlFor="customRange2" className="form-label mr-12 w-full">
-                      Rating
-                    </label>
-                    <input
-                      type="range"
-                      min="1"
-                      max="5"
-                      value={rating}
-                      onChange={(e) => setRating(e.target.value)}
-                      className="range range-primary"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="py-2 px-4 mx-auto mb-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                  >
-                    Review
-                  </button>
-                </form>
-              )}
-
+            <div className={"grid grid-cols-1 w-full"}>
               <section className="w-full mx-auto">
                 {talent.reviews.length > 0 && (
                   <div className="mx-auto max-w-screen-xl px-4 py-4 sm:px-2 lg:px-6">
@@ -249,6 +203,62 @@ const JobDetails: FC<JobProps> = (props) => {
                   ))}
                 </div>
               </section>
+
+              {token && user?.id !== talent?.id && (
+                <div>
+                  <button
+                      className="py-2 ml-4 px-4 mx-auto mb-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                      onClick={() => { setOpenReview(!openReview)} }
+                  >
+                    Add a review
+                  </button>
+                  {openReview &&<form
+                    onSubmit={postReview}
+                    className="flex border-t-1 border-t-gray-300 my-6 w-full mx-auto flex-col p-6 space-y-6 md:py-0 md:px-6 ng-untouched ng-pristine ng-valid"
+                  >
+                    <label className="block pt-4">
+                      <input
+                        type="text"
+                        placeholder="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="block w-full rounded-md shadow-sm focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
+                      />
+                    </label>
+                    <label className="block">
+                      <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        rows={3}
+                        placeholder="Comment Here"
+                        className="block w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 dark:bg-gray-800"
+                      ></textarea>
+                    </label>
+                    <div className="relative pt-1">
+                      <label
+                        htmlFor="customRange2"
+                        className="form-label mr-12 w-full"
+                      >
+                        Rating
+                      </label>
+                      <input
+                        type="range"
+                        min="1"
+                        max="5"
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                        className="range range-primary"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="py-2 px-4 mx-auto mb-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                    >
+                      Review
+                    </button>
+                  </form>}
+                </div>
+              )}
             </div>
           </div>
         </div>
